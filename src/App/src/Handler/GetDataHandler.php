@@ -6,6 +6,7 @@ namespace CooarchiApp\Handler;
 
 use CooarchiEntities;
 use CooarchiQueries;
+use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Template\TemplateRendererInterface;
@@ -44,12 +45,16 @@ final class GetDataHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $elements = $this->elementsQuery->all();
-        $elementRelations = $this->elementRelationsQuery->all();
 
-        return new JsonResponse(
-            $this->buildJsonRepresentation($elementRelations)
-        );
+        try {
+            //$elements = $this->elementsQuery->all();
+            $elementRelations = $this->elementRelationsQuery->all();
+            $data = $this->buildJsonRepresentation($elementRelations);
+        } catch (Exception $exception) {
+            return new JsonResponse(['error' => $exception->getMessage()], 500);
+        }
+
+        return new JsonResponse($data);
     }
 
     private function buildJsonRepresentation(array $elementRelations) : array
