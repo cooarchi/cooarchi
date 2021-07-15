@@ -41,10 +41,10 @@ class Element
     private $pubId;
 
     /**
-     * @ORM\Column(name="info", type="string", nullable=true)
+     * @ORM\Column(name="label", type="string", nullable=true)
      * @var null|string
      */
-    private $info;
+    private $label;
 
     /**
      * @ORM\Column(name="is_file", type="boolean", nullable=false)

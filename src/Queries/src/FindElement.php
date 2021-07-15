@@ -7,12 +7,12 @@ use CooarchiEntities;
 
 final class FindElement extends Base
 {
-    public function byInfo(string $infoText) : ?CooarchiEntities\Element
+    public function byInfo(string $labelText) : ?CooarchiEntities\Element
     {
         $query = $this->entityManager->createQuery("
-            SELECT elements FROM CooarchiEntities\Element elements WHERE elements.info = :infoText
+            SELECT elements FROM CooarchiEntities\Element elements WHERE elements.label = :labelText
         ");
-        $query->setParameter('infoText', $infoText);
+        $query->setParameter('labelText', $labelText);
 
         return $query->getOneOrNullResult();
     }
