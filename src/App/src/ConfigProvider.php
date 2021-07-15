@@ -11,6 +11,8 @@ namespace CooarchiApp;
  */
 class ConfigProvider
 {
+    public const ENCODING = 'UTF-8';
+
     /**
      * Returns the configuration array
      *
