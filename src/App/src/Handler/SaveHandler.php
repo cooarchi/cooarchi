@@ -75,7 +75,7 @@ class SaveHandler implements RequestHandlerInterface
         try {
             $bodyAttributes = $request->getParsedBody();
 
-            $relationAttributes = $bodyAttributes['links'] ?? [];
+            $relationAttributes = $bodyAttributes['links'][0] ?? [];
             if ($relationAttributes === []) {
                 return new JsonResponse(['error' => 'No relation/links data provided'], 500);
             }
@@ -89,7 +89,7 @@ class SaveHandler implements RequestHandlerInterface
             $sourceLabel = $relationAttributes['source']['label'];
             $targetLabel = $relationAttributes['target']['label'] ?? null;
             $relationDescription = trim(
-                (string) filter_var($relationAttributes['name'], FILTER_SANITIZE_STRING)
+                (string) filter_var($relationAttributes['label'], FILTER_SANITIZE_STRING)
             );
 
             if (isset($elements[$sourceLabel]) === false) {
