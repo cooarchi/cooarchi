@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace CooarchiApp\Handler;
 
 use CooarchiQueries;
-use Mezzio\Helper\UrlHelper;
 use Psr\Container\ContainerInterface;
+use Ramsey\Uuid\Codec\OrderedTimeCodec;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
 
 class SaveHandlerFactory
 {
@@ -13,11 +15,17 @@ class SaveHandlerFactory
     {
         $entityManager = $container->get('doctrine.entity_manager.orm_default');
 
+         /** @var UuidFactory $uuidFactory */
+        $uuidFactory = Uuid::getFactory();
+        $codec = new OrderedTimeCodec($uuidFactory->getUuidBuilder());
+        $uuidFactory->setCodec($codec);
+
         return new SaveHandler(
             $entityManager,
             new CooarchiQueries\FindElement($entityManager),
             new CooarchiQueries\FindElementRelation($entityManager),
-            new CooarchiQueries\FindRelationLabel($entityManager)
+            new CooarchiQueries\FindRelationLabel($entityManager),
+            $uuidFactory
         );
     }
 }

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace CooarchiApp\Handler;
 
+use CooarchiApp\Helper;
+use CooarchiApp\ValueObject;
 use CooarchiEntities;
 use CooarchiQueries;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Json\Json;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Ramsey\Uuid\Codec\OrderedTimeCodec;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
 use function filter_var;
 use function trim;
 
 class SaveHandler implements RequestHandlerInterface
 {
+    public const ROUTE = '/save';
     public const ROUTE_NAME = 'save';
 
     /**
@@ -43,16 +43,23 @@ class SaveHandler implements RequestHandlerInterface
      */
     private $findRelationLabelQuery;
 
+    /**
+     * @var UuidFactory
+     */
+    private $uuidFactory;
+
     public function __construct(
         EntityManager $entityManager,
         CooarchiQueries\FindElement $findElementQuery,
         CooarchiQueries\FindElementRelation $findElementRelationQuery,
-        CooarchiQueries\FindRelationLabel $findRelationLabelQuery
+        CooarchiQueries\FindRelationLabel $findRelationLabelQuery,
+        UuidFactory $uuidFactory
     ) {
         $this->entityManager = $entityManager;
         $this->findElementQuery = $findElementQuery;
         $this->findElementRelationQuery = $findElementRelationQuery;
         $this->findRelationLabelQuery = $findRelationLabelQuery;
+        $this->uuidFactory = $uuidFactory;
     }
 
     /**
@@ -66,64 +73,69 @@ class SaveHandler implements RequestHandlerInterface
         }
 
         try {
-            $bodyContent= $request->getBody()->getContents();
-            $bodyAttributes = Json::decode($bodyContent, Json::TYPE_ARRAY);
+            $bodyAttributes = $request->getParsedBody();
 
-            if (isset($bodyAttributes['source']['id']) === false &&
-                isset($bodyAttributes['target']['id']) === false &&
-                isset($bodyAttributes['name']) === false
-            ) {
-                return new JsonResponse(['error' => 'Missing input'], 500);
+            $relationAttributes = $bodyAttributes['links'] ?? [];
+            if ($relationAttributes === []) {
+                return new JsonResponse(['error' => 'No relation/links data provided'], 500);
             }
 
-            /** @var UuidFactory $uuidFactory */
-            $uuidFactory = Uuid::getFactory();
-            $codec = new OrderedTimeCodec($uuidFactory->getUuidBuilder());
-            $uuidFactory->setCodec($codec);
+            $elements = [];
+            foreach ($bodyAttributes['nodes'] ?? [] as $elementData) {
+                $elementValues = ValueObject\Element::createFromArray($elementData);
+                $elements[$elementValues->getLabel()] = $elementValues;
+            }
 
-            $elementFromText = trim((string) filter_var($bodyAttributes['source']['id'], FILTER_SANITIZE_STRING));
-            $elementToText = trim((string) filter_var($bodyAttributes['target']['id'], FILTER_SANITIZE_STRING));
-            $relationText = trim((string) filter_var($bodyAttributes['name'], FILTER_SANITIZE_STRING));
+            $sourceLabel = $relationAttributes['source']['label'];
+            $targetLabel = $relationAttributes['target']['label'] ?? null;
+            $relationDescription = trim(
+                (string) filter_var($relationAttributes['name'], FILTER_SANITIZE_STRING)
+            );
 
-            $elementFrom = $this->findElementQuery->byInfo($elementFromText);
-            $elementTo = $this->findElementQuery->byInfo($elementToText);
-            $relationLabel = $this->findRelationLabelQuery->byDescription($relationText);
+            if (isset($elements[$sourceLabel]) === false) {
+                return new JsonResponse(['error' => 'Node data missing for source label: ' .  $sourceLabel], 500);
+            }
+            if ($targetLabel !== null && isset($elements[$targetLabel]) === false) {
+                return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetLabel], 500);
+            }
+
+            $elementFromValues = $elements[$sourceLabel];
+            $elementToValues = $elements[$targetLabel] ?? null;
+
+            $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
 
             // Element From only case
-            if ($elementFromText === '') {
+            if ($targetLabel === null || $targetLabel === '') {
                 if ($elementFrom === null) {
-                    $elementFrom = new CooarchiEntities\Element($uuidFactory->uuid1(), false, $elementFromText);
+                    $elementFrom = $this->createElement($elementFromValues);
                     $this->entityManager->persist($elementFrom);
                     $this->entityManager->flush();
                 }
                 return new JsonResponse(
-                    [
-                        'message' => 'Core element created',
-                        'element' => [
-                            'id' => $elementFrom->getPubId(),
-                            'name' => $elementFrom->getInfo()
-                        ],
-                    ],
+                    Helper\JsonRepresentation::create([$elementFrom], []),
                     200
                 );
             }
 
+            $elementTo = $this->findElementQuery->byInfo($elementToValues->getLabel());
+            $relationLabel = $this->findRelationLabelQuery->byDescription($relationDescription);
             $newElementCheck = false;
+
             if ($elementFrom === null) {
-                $elementFrom = new CooarchiEntities\Element($uuidFactory->uuid1(), false, $elementFromText);
+                $elementFrom = $this->createElement($elementFromValues);
                 $this->entityManager->persist($elementFrom);
                 $newElementCheck = true;
             }
-            if ($elementFromText === $elementToText) {
+            if ($sourceLabel === $targetLabel) {
                 $elementTo = $elementFrom;
             }
             elseif ($elementTo === null) {
-                $elementTo = new CooarchiEntities\Element($uuidFactory->uuid1(), false, $elementToText);
+                $elementTo = $this->createElement($elementToValues);
                 $this->entityManager->persist($elementTo);
                 $newElementCheck = true;
             }
             if ($relationLabel === null) {
-                $relationLabel = new CooarchiEntities\RelationLabel($uuidFactory->uuid1(), $relationText);
+                $relationLabel = new CooarchiEntities\RelationLabel($this->uuidFactory->uuid1(), $relationDescription);
                 $this->entityManager->persist($relationLabel);
                 $newElementCheck = true;
             }
@@ -139,17 +151,7 @@ class SaveHandler implements RequestHandlerInterface
 
             if ($relation !== null) {
                 return new JsonResponse(
-                    [
-                        'name' => $relation->getRelationLabel()->getDescription(),
-                        'source' => [
-                            'id' => $relation->getElementFrom()->getPubId(),
-                            'name' => $relation->getElementFrom()->getInfo(),
-                        ],
-                        'target' => [
-                            'id' => $relation->getElementTo()->getPubId(),
-                            'name' => $relation->getElementTo()->getInfo(),
-                        ],
-                    ],
+                    Helper\JsonRepresentation::create([$elementFrom, $elementTo], [$relation]),
                     200
                 );
             }
@@ -167,18 +169,24 @@ class SaveHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse(
-            [
-                'name' => $relationLabel->getDescription(),
-                'source' => [
-                    'id' => $elementFrom->getPubId(),
-                    'name' => $elementFrom->getInfo(),
-                ],
-                'target' => [
-                    'id' => $elementTo->getPubId(),
-                    'name' => $elementTo->getInfo(),
-                ],
-            ],
+            Helper\JsonRepresentation::create([$elementFrom, $elementTo], [$elementRelation]),
             200
+        );
+    }
+
+    private function createElement(ValueObject\Element $elementValues) : CooarchiEntities\Element
+    {
+        return new CooarchiEntities\Element(
+            $this->uuidFactory->uuid1(),
+            false,
+            false,
+            $elementValues->isLocation(),
+            $elementValues->isLongText(),
+            $elementValues->isTriggerWarning(),
+            $elementValues->getLabel(),
+            $elementValues->getLongText(),
+            null,
+            $elementValues->getMediaType()
         );
     }
 }
