@@ -28,19 +28,12 @@ final class GetDataHandler implements RequestHandlerInterface
      */
     private $elementRelationsQuery;
 
-    /**
-     * @var CooarchiQueries\GetRelationLabels
-     */
-    private $relationLabelsQuery;
-
     public function __construct(
         CooarchiQueries\GetElements $elementsQuery,
-        CooarchiQueries\GetElementRelations $elementRelationsQuery,
-        CooarchiQueries\GetRelationLabels $relationLabelsQuery
+        CooarchiQueries\GetElementRelations $elementRelationsQuery
     ) {
         $this->elementsQuery = $elementsQuery;
         $this->elementRelationsQuery = $elementRelationsQuery;
-        $this->relationLabelsQuery = $relationLabelsQuery;
     }
 
     public function handle(ServerRequestInterface $request) : ResponseInterface

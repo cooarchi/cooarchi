@@ -15,8 +15,7 @@ final class GetDataHandlerFactory
 
         return new GetDataHandler(
             new CooarchiQueries\GetElements($entityManager),
-            new CooarchiQueries\GetElementRelations($entityManager),
-            new CooarchiQueries\GetRelationLabels($entityManager)
+            new CooarchiQueries\GetElementRelations($entityManager)
         );
     }
 }
