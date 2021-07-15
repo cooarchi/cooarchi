@@ -40,6 +40,7 @@ class ConfigProvider
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
                 Handler\SaveHandler::class => Handler\SaveHandlerFactory::class,
+                Handler\UploadHandler::class => Handler\UploadHandlerFactory::class,
             ],
         ];
     }
