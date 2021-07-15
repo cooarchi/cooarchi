@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace CooarchiEntities;
 
+use CooarchiApp\ConfigProvider;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use function filter_var;
+use function mb_strlen;
+use function trim;
 
 /**
  * RelationLabel Entity
@@ -54,9 +58,13 @@ class RelationLabel
 
     public function __construct(UuidInterface $relationLabelId, string $description)
     {
+        if (mb_strlen($description, ConfigProvider::ENCODING) > 255) {
+            throw new InvalidArgumentException('Description is too long (> 255 chars)');
+        }
+
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
         $this->id = $relationLabelId->toString();
-        $this->description = filter_var($description, FILTER_SANITIZE_STRING);
+        $this->description = trim((string) filter_var($description, FILTER_SANITIZE_STRING));
         $this->pubId = (string) Uuid::uuid4();
     }
 
