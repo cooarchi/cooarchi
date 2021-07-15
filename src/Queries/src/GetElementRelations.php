@@ -13,13 +13,17 @@ final class GetElementRelations extends Base
     public function all() : array
     {
         $query = $this->entityManager->createQuery("
-            SELECT elementRelations
+            SELECT 
+                relationLabels.description as relationLabel, 
+                elementFrom.pubId as pubIdFrom,
+                elementTo.pubId as pubIdTo
             FROM CooarchiEntities\ElementRelation elementRelations
+            LEFT JOIN elementRelations.relationLabel relationLabels
+            LEFT JOIN elementRelations.elementTo elementTo
+            LEFT JOIN elementRelations.elementFrom elementFrom
             ORDER BY elementRelations.created DESC
         ");
-        //LEFT JOIN elementRelations.RelationLabel relationLabels
-        //LEFT JOIN elementRelations.Element elements
 
-        return $query->getResult();
+        return $query->getArrayResult();
     }
 }
