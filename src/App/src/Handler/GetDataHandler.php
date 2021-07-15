@@ -7,6 +7,9 @@ namespace CooarchiApp\Handler;
 use CooarchiApp\Helper;
 use CooarchiEntities;
 use CooarchiQueries;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -38,16 +41,36 @@ final class GetDataHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $delta = $request->getQueryParams()['delta'] ?? null;
+        $delta = (int) ($request->getQueryParams()['delta'] ?? 0);
+        $deltaSinceDateTime = new DateTime('now', new DateTimeZone('UTC'));
+        $deltaSinceDateTime->sub(new DateInterval('PT1M'));
 
         try {
-            $elements = $this->elementsQuery->all();
-            $elementRelations = $this->elementRelationsQuery->all();
+            $elements = $this->getElements($delta, $deltaSinceDateTime);
+            $elementRelations = $this->getRelations($delta, $deltaSinceDateTime);
             $data = Helper\JsonRepresentation::create($elements, $elementRelations);
         } catch (Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
         }
 
         return new JsonResponse($data);
+    }
+
+    private function getElements(int $delta, DateTime $deltaSinceDateTime) : array
+    {
+        if ($delta === 1) {
+            return $this->elementsQuery->delta($deltaSinceDateTime);
+        }
+
+        return $this->elementsQuery->all();
+    }
+
+    private function getRelations(int $delta, DateTime $deltaSinceDateTime) : array
+    {
+        if ($delta === 1) {
+            return $this->elementRelationsQuery->delta($deltaSinceDateTime);
+        }
+
+        return $this->elementRelationsQuery->all();
     }
 }
