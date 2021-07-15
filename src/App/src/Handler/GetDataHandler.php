@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace CooarchiApp\Handler;
 
+use CooarchiApp\Helper;
 use CooarchiEntities;
 use CooarchiQueries;
 use Exception;
-use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 final class GetDataHandler implements RequestHandlerInterface
 {
+    public const ROUTE = '/data';
     public const ROUTE_NAME = 'data';
 
     /**
@@ -38,37 +38,16 @@ final class GetDataHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
+        $delta = $request->getQueryParams()['delta'] ?? null;
 
         try {
-            //$elements = $this->elementsQuery->all();
+            $elements = $this->elementsQuery->all();
             $elementRelations = $this->elementRelationsQuery->all();
-            $data = $this->buildJsonRepresentation($elementRelations);
+            $data = Helper\JsonRepresentation::create($elements, $elementRelations);
         } catch (Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
         }
 
         return new JsonResponse($data);
-    }
-
-    private function buildJsonRepresentation(array $elementRelations) : array
-    {
-        $json = [];
-
-        /** @var CooarchiEntities\ElementRelation $relation */
-        foreach ($elementRelations as $relation) {
-            $json[] = [
-                'name' => $relation->getRelationLabel()->getDescription(),
-                'source' => [
-                    'id' => $relation->getElementFrom()->getPubId(),
-                    'name' => $relation->getElementFrom()->getInfo(),
-                ],
-                'target' => [
-                    'id' => $relation->getElementTo()->getPubId(),
-                    'name' => $relation->getElementTo()->getInfo(),
-                ],
-            ];
-        }
-
-        return $json;
     }
 }
