@@ -12,6 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class HomeHandler implements RequestHandlerInterface
 {
+    public const ROUTE = '/home';
     public const ROUTE_NAME = 'home';
 
     /**

@@ -13,6 +13,7 @@ use function time;
 
 class PingHandler implements RequestHandlerInterface
 {
+    public const ROUTE = '/ping';
     public const ROUTE_NAME = 'ping';
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
