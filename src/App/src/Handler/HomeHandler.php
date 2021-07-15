@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class HomeHandler implements RequestHandlerInterface
 {
-    public const ROUTE = '/home';
+    public const ROUTE = '/';
     public const ROUTE_NAME = 'home';
 
     /**
@@ -29,7 +29,6 @@ class HomeHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $data = [];
-
         // $this->templateRenderer->addDefaultParam(TemplateRendererInterface::TEMPLATE_ALL, 'identity', $user);
 
         return new HtmlResponse($this->template->render('app::home', $data));
