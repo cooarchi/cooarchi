@@ -16,8 +16,8 @@ final class GetElementRelations extends Base
         $query = $this->entityManager->createQuery("
             SELECT 
                 relationLabels.description as relationLabel, 
-                elementFrom.info as pubIdFrom,
-                elementTo.info as pubIdTo
+                elementFrom.label as pubIdFrom,
+                elementTo.label as pubIdTo
             FROM CooarchiEntities\ElementRelation elementRelations
             LEFT JOIN elementRelations.relationLabel relationLabels
             LEFT JOIN elementRelations.elementTo elementTo
@@ -37,8 +37,8 @@ final class GetElementRelations extends Base
         $query = $this->entityManager->createQuery("
             SELECT 
                 relationLabels.description as relationLabel, 
-                elementFrom.info as pubIdFrom,
-                elementTo.info as pubIdTo
+                elementFrom.label as pubIdFrom,
+                elementTo.label as pubIdTo
             FROM CooarchiEntities\ElementRelation elementRelations
             LEFT JOIN elementRelations.relationLabel relationLabels
             LEFT JOIN elementRelations.elementTo elementTo
