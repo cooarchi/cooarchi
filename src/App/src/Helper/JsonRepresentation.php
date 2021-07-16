@@ -18,7 +18,8 @@ final class JsonRepresentation
         /** @var CooarchiEntities\Element $element */
         foreach ($elements as $element) {
             $node = [
-                'id' => $element->getPubId(),
+                'id' => $element->getLabel(),
+                //'id' => $element->getPubId(),
                 'label' => $element->getLabel(),
                 'isCoreElement' => $element->isCoreElement(),
                 'isFile' => $element->isFile(),
@@ -36,8 +37,10 @@ final class JsonRepresentation
             if ($relation instanceof CooarchiEntities\ElementRelation) {
                 $relation = [
                     'relationLabel' => $relation->getRelationLabel()->getDescription(),
-                    'pubIdFrom' => $relation->getElementFrom()->getPubId(),
-                    'pubIdTo' => $relation->getElementTo()->getPubId(),
+                    'pubIdFrom' => $relation->getElementFrom()->getLabel(),
+                    'pubIdTo' => $relation->getElementTo()->getLabel(),
+                    //'pubIdFrom' => $relation->getElementFrom()->getPubId(),
+                    //'pubIdTo' => $relation->getElementTo()->getPubId(),
                 ];
             }
 
