@@ -22,7 +22,7 @@ use function trim;
  * @ORM\Table(
  *   name="elements",
  *   indexes={
- *     @ORM\Index(name="element_infox", columns={"info"})
+ *     @ORM\Index(name="element_labelx", columns={"label"})
  *   },
  *   uniqueConstraints={
  *     @ORM\UniqueConstraint(name="element_unique_pubidx", columns={"pub_id"})
@@ -136,7 +136,7 @@ class Element
         ?string $url = null
     ) {
         if ($label !== null && mb_strlen($label, ConfigProvider::ENCODING) > 255) {
-            throw new InvalidArgumentException('Info Text is too long (> 255 chars)');
+            throw new InvalidArgumentException('Label Text is too long (> 255 chars)');
         }
         if ($mediaType !== null && in_array($mediaType, self::MEDIA_TYPES, true) === false) {
             throw new InvalidArgumentException('Provided MediaType attribute is invalid');
