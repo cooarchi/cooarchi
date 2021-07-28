@@ -111,7 +111,7 @@ class Element
     private $triggerWarning;
 
     /**
-     * @ORM\Column(name="url", type="string", nullable=false)
+     * @ORM\Column(name="url", type="string", nullable=true)
      * @var string
      */
     private $url;
