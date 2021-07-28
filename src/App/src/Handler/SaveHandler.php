@@ -186,7 +186,8 @@ class SaveHandler implements RequestHandlerInterface
             $elementValues->getLabel(),
             $elementValues->getLongText(),
             null,
-            $elementValues->getMediaType()
+            $elementValues->getMediaType(),
+            $elementValues->getUrl()
         );
     }
 }

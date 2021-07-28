@@ -39,13 +39,19 @@ final class Element
      */
     private $triggerWarning;
 
+    /**
+     * @var null|string
+     */
+    private $url;
+
     private function __construct(
         bool $isLocation,
         bool $isLongText,
         ?string $longText,
         ?string $mediaType,
         string $label,
-        bool $triggerWarning
+        bool $triggerWarning,
+        ?string $url
     ) {
         $this->isLocation = $isLocation;
         $this->isLongText = $isLongText;
@@ -53,6 +59,7 @@ final class Element
         $this->mediaType = $mediaType;
         $this->label = $label;
         $this->triggerWarning = $triggerWarning;
+        $this->url = $url;
     }
 
     public static function createFromArray(array $values) : self
@@ -72,7 +79,8 @@ final class Element
             $values['longText'] ?? null,
             $mediaType,
             $values['label'],
-            $values['triggerWarning'] ?? false
+            $values['triggerWarning'] ?? false,
+            $values['url'] ?? null
         );
     }
 
@@ -99,6 +107,11 @@ final class Element
     public function getLabel() : string
     {
         return $this->label;
+    }
+
+    public function getUrl() : ?string
+    {
+        return $this->url;
     }
 
     public function isTriggerWarning() : bool
