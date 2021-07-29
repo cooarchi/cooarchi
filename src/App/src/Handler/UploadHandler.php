@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace CooarchiApp\Handler;
 
 use CooarchiEntities;
-use CooarchiQueries;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use InvalidArgumentException;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Json\Json;
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Ramsey\Uuid\Codec\OrderedTimeCodec;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
-use function filter_var;
-use function trim;
+use function file_put_contents;
+use function sprintf;
 
 class UploadHandler implements RequestHandlerInterface
 {
@@ -25,21 +23,28 @@ class UploadHandler implements RequestHandlerInterface
     public const ROUTE_NAME = 'upload';
 
     /**
+     * @var string
+     */
+    private $basePath;
+
+    /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @var CooarchiQueries\FindElement
+     * @var UuidFactory
      */
-    private $findElementQuery;
+    private $uuidFactory;
 
     public function __construct(
         EntityManager $entityManager,
-        CooarchiQueries\FindElement $findElementQuery
+        UuidFactory $uuidFactory,
+        string $basePath
     ) {
+        $this->basePath = $basePath;
         $this->entityManager = $entityManager;
-        $this->findElementQuery = $findElementQuery;
+        $this->uuidFactory = $uuidFactory;
     }
 
     /**
@@ -53,19 +58,65 @@ class UploadHandler implements RequestHandlerInterface
         }
 
         try {
-            $bodyAttributes = $request->getBody()->getContents();
-            $bodySize = $request->getBody()->getSize();
+            $metaData = $request->getHeaders();
+            $bodyContent = $request->getBody()->getContents();
+            $files = $request->getUploadedFiles();
 
-            \Doctrine\Common\Util\Debug::dump($bodyAttributes);
-            exit();
-            $elementFrom = $this->findElementQuery->byInfo($elementFromText);
+            //\Doctrine\Common\Util\Debug::dump($files);
+            //\Doctrine\Common\Util\Debug::dump($metaData);
+            //\Doctrine\Common\Util\Debug::dump($bodyContent);
+
+            $mimeType = 'image/jpeg';
+            $label = null;
+
+            $file = new CooarchiEntities\File(
+                $this->uuidFactory->uuid1(),
+                $mimeType,
+                23,
+                $label
+            );
+
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
+
+            $extension = $this->getFileExtension($file->getMimeType());
+            $fileName = sprintf(
+                '%s.%s',
+                $file->getPubId(),
+                $extension
+            );
+            $filePath = sprintf(
+                '%s/data/files/%s',
+                $this->basePath,
+                $fileName
+            );
+
+            $result = file_put_contents($filePath, $bodyContent);
+
+            if ($result === false) {
+                throw new LogicException('Writing file did not work');
+            }
         } catch (Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
         }
 
         return new JsonResponse(
-            [],
+            ['filename' => $fileName],
             200
         );
+    }
+
+    private function getFileExtension(string $mimeType) : string
+    {
+        switch ($mimeType) {
+            case 'image/jpeg' :
+                return 'jpg';
+            case 'image/png' :
+                return 'png';
+            case 'image/gif' :
+                return 'gif';
+            default :
+                throw new InvalidArgumentException(sprintf('MimeType "%s" is not supported', $mimeType));
+        }
     }
 }
