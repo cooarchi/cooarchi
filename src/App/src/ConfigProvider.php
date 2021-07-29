@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CooarchiApp;
 
+use function dirname;
+
 /**
  * The configuration provider for the App module
  *
@@ -24,6 +26,7 @@ class ConfigProvider
         return [
             'dependencies' => $this->getDependencies(),
             'templates'    => $this->getTemplates(),
+            'basePath'     => dirname(__DIR__, 3),
         ];
     }
 
