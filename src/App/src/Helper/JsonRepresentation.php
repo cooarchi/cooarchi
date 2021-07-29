@@ -27,7 +27,7 @@ final class JsonRepresentation
                 'longText' => $element->getLongText(),
                 'mediaType' => $element->getMediaType(),
                 'triggerWarning' => $element->hasTriggerWarning(),
-                'url' => $element->getUrl(),
+                'url' => $element->getFilePath(),
             ];
             $json['nodes'][] = $node;
         }

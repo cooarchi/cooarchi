@@ -111,12 +111,6 @@ class Element
     private $triggerWarning;
 
     /**
-     * @ORM\Column(name="url", type="string", nullable=true)
-     * @var string
-     */
-    private $url;
-
-    /**
      * @ORM\Column(type="datetime")
      * @var DateTime
      */
@@ -132,8 +126,7 @@ class Element
         ?string $label,
         ?string $longText = null,
         ?string $filePath = null,
-        ?string $mediaType = null,
-        ?string $url = null
+        ?string $mediaType = null
     ) {
         if ($label !== null && mb_strlen($label, ConfigProvider::ENCODING) > 255) {
             throw new InvalidArgumentException('Label Text is too long (> 255 chars)');
@@ -148,9 +141,6 @@ class Element
         if ($longText !== null) {
             $longText = trim((string) filter_var($longText, FILTER_SANITIZE_STRING));
         }
-        if ($url !== null) {
-            $url = trim((string) filter_var($url, FILTER_SANITIZE_STRING));
-        }
 
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
         $this->filePath = $filePath;
@@ -164,7 +154,6 @@ class Element
         $this->mediaType = $mediaType;
         $this->pubId = (string) Uuid::uuid4();
         $this->triggerWarning = $triggerWarning;
-        $this->url = $url;
     }
 
     public function getCreated() : DateTime
@@ -200,11 +189,6 @@ class Element
     public function getPubId() : string
     {
         return $this->pubId;
-    }
-
-    public function getUrl() : ?string
-    {
-        return $this->url;
     }
 
     public function hasTriggerWarning() : bool
