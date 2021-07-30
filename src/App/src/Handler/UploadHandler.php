@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use InvalidArgumentException;
 use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\UploadedFile;
 use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,21 +59,21 @@ class UploadHandler implements RequestHandlerInterface
         }
 
         try {
-            $metaData = $request->getHeaders();
-            $bodyContent = $request->getBody()->getContents();
             $files = $request->getUploadedFiles();
+            if (isset($files['file']) === false) {
+                throw new InvalidArgumentException('No file provided for upload');
+            }
 
-            //\Doctrine\Common\Util\Debug::dump($files);
-            //\Doctrine\Common\Util\Debug::dump($metaData);
-            //\Doctrine\Common\Util\Debug::dump($bodyContent);
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $files['file'];
 
-            $mimeType = 'image/jpeg';
+            $mimeType = $uploadedFile->getClientMediaType();
             $label = null;
 
             $file = new CooarchiEntities\File(
                 $this->uuidFactory->uuid1(),
                 $mimeType,
-                23,
+                (int) $uploadedFile->getSize(),
                 $label
             );
 
@@ -91,11 +92,7 @@ class UploadHandler implements RequestHandlerInterface
                 $fileName
             );
 
-            $result = file_put_contents($filePath, $bodyContent);
-
-            if ($result === false) {
-                throw new LogicException('Writing file did not work');
-            }
+            $uploadedFile->moveTo($filePath);
         } catch (Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
         }
