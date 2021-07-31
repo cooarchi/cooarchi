@@ -98,7 +98,7 @@ class UploadHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse(
-            ['filename' => $fileName],
+            ['filename' => sprintf('/data/files/%s', $fileName)],
             200
         );
     }
