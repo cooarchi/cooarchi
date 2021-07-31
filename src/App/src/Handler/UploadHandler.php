@@ -87,7 +87,7 @@ class UploadHandler implements RequestHandlerInterface
                 $extension
             );
             $filePath = sprintf(
-                '%s/data/files/%s',
+                '%s/public/files/%s',
                 $this->basePath,
                 $fileName
             );
@@ -98,7 +98,7 @@ class UploadHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse(
-            ['filename' => sprintf('/data/files/%s', $fileName)],
+            ['filename' => sprintf('/files/%s', $fileName)],
             200
         );
     }

@@ -28,7 +28,7 @@ final class JsonRepresentation
                 'longText' => $element->getLongText(),
                 'mediaType' => $element->getMediaType(),
                 'triggerWarning' => $element->hasTriggerWarning(),
-                'url' => sprintf('/data/files/%s', $element->getFilePath()),
+                'url' => sprintf('/files/%s', $element->getFilePath()),
             ];
             $json['nodes'][] = $node;
         }
