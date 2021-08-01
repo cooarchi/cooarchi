@@ -10,12 +10,10 @@ use Exception;
 use InvalidArgumentException;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\UploadedFile;
-use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\UuidFactory;
-use function file_put_contents;
 use function sprintf;
 
 class UploadHandler implements RequestHandlerInterface
