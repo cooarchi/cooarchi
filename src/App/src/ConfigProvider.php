@@ -38,12 +38,16 @@ class ConfigProvider
         return [
             'invokables' => [
                 Handler\PingHandler::class => Handler\PingHandler::class,
+                Middleware\SlimFlashMiddleware::class => Middleware\SlimFlashMiddleware::class,
             ],
             'factories'  => [
+                Authentication\Adapter::class => Authentication\AdapterFactory::class,
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
                 Handler\SaveHandler::class => Handler\SaveHandlerFactory::class,
                 Handler\UploadHandler::class => Handler\UploadHandlerFactory::class,
+                Middleware\AuthMiddleware::class => Middleware\AuthFactory::class,
+                Middleware\PermissionMiddleware::class => Middleware\PermissionFactory::class,
             ],
         ];
     }
@@ -56,6 +60,7 @@ class ConfigProvider
         return [
             'paths' => [
                 'app'    => [__DIR__ . '/../templates/app'],
+                'auth'    => [__DIR__ . '/../templates/auth'],
                 'error'  => [__DIR__ . '/../templates/error'],
                 'layout' => [__DIR__ . '/../templates/layout'],
             ],
