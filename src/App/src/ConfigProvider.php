@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CooarchiApp;
 
+use Laminas\Authentication\AuthenticationService;
 use function dirname;
 
 /**
@@ -41,6 +42,7 @@ class ConfigProvider
                 Middleware\SlimFlashMiddleware::class => Middleware\SlimFlashMiddleware::class,
             ],
             'factories'  => [
+                AuthenticationService::class => Authentication\AuthenticationServiceFactory::class,
                 Authentication\Adapter::class => Authentication\AdapterFactory::class,
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
