@@ -176,10 +176,15 @@ class SaveHandler implements RequestHandlerInterface
 
     private function createElement(ValueObject\Element $elementValues) : CooarchiEntities\Element
     {
+        $isFile = false;
+        if ($elementValues->getUrl() !== null) {
+            $isFile = true;
+        }
+
         return new CooarchiEntities\Element(
             $this->uuidFactory->uuid1(),
             false,
-            false,
+            $isFile,
             $elementValues->isLocation(),
             $elementValues->isLongText(),
             $elementValues->isTriggerWarning(),
