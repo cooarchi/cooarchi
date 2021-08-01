@@ -68,7 +68,7 @@ class UploadHandler implements RequestHandlerInterface
             $uploadedFile = $files['file'];
 
             $mimeType = $uploadedFile->getClientMediaType();
-            $label = null;
+            $label = null; // @todo not implemented in frontend right now
 
             $file = new CooarchiEntities\File(
                 $this->uuidFactory->uuid1(),
