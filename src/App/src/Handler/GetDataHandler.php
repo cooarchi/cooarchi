@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CooarchiApp\Handler;
 
 use CooarchiApp\Helper;
-use CooarchiEntities;
 use CooarchiQueries;
 use DateInterval;
 use DateTime;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CooarchiApp\Handler;
 
 use CooarchiQueries;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 
 final class GetDataHandlerFactory
