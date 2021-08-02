@@ -118,8 +118,8 @@ class SaveHandler implements RequestHandlerInterface
                 return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetLabel], 500);
             }
 
-            $elementFromValues = $elements[$sourceLabel];
-            $elementToValues = $elements[$targetLabel] ?? null;
+            $elementFromValues = $elements[$sourceKey];
+            $elementToValues = $elements[$targetKey] ?? null;
 
             $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
 
