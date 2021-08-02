@@ -83,19 +83,36 @@ class SaveHandler implements RequestHandlerInterface
             $elements = [];
             foreach ($bodyAttributes['nodes'] ?? [] as $elementData) {
                 $elementValues = ValueObject\Element::createFromArray($elementData);
-                $elements[$elementValues->getLabel()] = $elementValues;
+                $elementKey = $elementValues->getLabel();
+                if ($elementValues->getLabel() === null) {
+                    $elementKey = $elementValues->getUrl();
+                }
+                $elements[$elementKey] = $elementValues;
             }
 
             $sourceLabel = $relationAttributes['source']['label'];
-            $targetLabel = $relationAttributes['target']['label'] ?? null;
+            $targetLabel = $relationAttributes['target']['label'];
             $relationDescription = trim(
                 (string) filter_var($relationAttributes['label'], FILTER_SANITIZE_STRING)
             );
 
-            if (isset($elements[$sourceLabel]) === false) {
+            $sourceKey = $sourceLabel;
+            if ($relationAttributes['source']['isFile'] === true &&
+                $relationAttributes['source']['url'] !== ''
+            ) {
+                $sourceKey = $relationAttributes['source']['url'];
+            }
+            $targetKey = $targetLabel;
+            if ($relationAttributes['target']['isFile'] === true &&
+                $relationAttributes['target']['url'] !== ''
+            ) {
+                $targetKey = $relationAttributes['target']['url'];
+            }
+
+            if (isset($elements[$sourceKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for source label: ' .  $sourceLabel], 500);
             }
-            if ($targetLabel !== null && isset($elements[$targetLabel]) === false) {
+            if ($targetLabel !== '' && isset($elements[$targetKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetLabel], 500);
             }
 
