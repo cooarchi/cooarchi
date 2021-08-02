@@ -33,10 +33,13 @@
         "php": "^7.2",
         "ext-json": "^7.4",
         "composer/package-versions-deprecated": "^1.10.99",
+        "laminas/laminas-authentication": "^2.8",
         "laminas/laminas-component-installer": "^2.1.2",
         "laminas/laminas-config-aggregator": "^1.2",
+        "laminas/laminas-crypt": "^3.4",
         "laminas/laminas-diactoros": "^2.3.0",
         "laminas/laminas-json": "^3.2",
+        "laminas/laminas-permissions-rbac": "^3.1",
         "laminas/laminas-servicemanager": "^3.4",
         "laminas/laminas-stdlib": "^3.2.1",
         "laminas/laminas-zendframework-bridge": "^1.0",
@@ -46,7 +49,9 @@
         "mezzio/mezzio-twigrenderer": "^2.6",
         "ramsey/uuid": "^4.1",
         "ramsey/uuid-doctrine": "^1.6",
-        "roave/psr-container-doctrine": "^3.0"
+        "roave/psr-container-doctrine": "^3.0",
+        "slim/flash": "^0.4.0",
+        "teapot/status-code": "^1.1"
     },
     "require-dev": {
         "laminas/laminas-development-mode": "^3.2",
