@@ -84,7 +84,7 @@ class SaveHandler implements RequestHandlerInterface
             foreach ($bodyAttributes['nodes'] ?? [] as $elementData) {
                 $elementValues = ValueObject\Element::createFromArray($elementData);
                 $elementKey = $elementValues->getLabel();
-                if ($elementValues->getLabel() === null) {
+                if ($elementValues->getUrl() !== null) {
                     $elementKey = $elementValues->getUrl();
                 }
                 $elements[$elementKey] = $elementValues;

@@ -76,7 +76,7 @@ final class Element
         }
 
         $url = $values['url'] ?? null;
-        if ($url === '') {
+        if (empty($url) === true) {
             $url = null;
         }
 
