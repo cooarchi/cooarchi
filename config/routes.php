@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 use CooarchiApp\Handler;
+use CooarchiApp\Middleware;
 use Mezzio\Application;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\MiddlewareFactory;
@@ -33,17 +35,47 @@ use Psr\Container\ContainerInterface;
  *     'contact'
  * );
  */
-return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
-    $app->get(Handler\HomeHandler::ROUTE, Handler\HomeHandler::class, Handler\HomeHandler::ROUTE_NAME);
+return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
+{
+    $app->get(
+        Handler\PingHandler::ROUTE,
+        Handler\PingHandler::class,
+        Handler\PingHandler::ROUTE_NAME
+    );
+    $app->get(
+        Handler\HomeHandler::ROUTE,
+        Handler\HomeHandler::class,
+        Handler\HomeHandler::ROUTE_NAME
+    );
+    $app->route(
+        Handler\LoginHandler::ROUTE,
+        [
+            Handler\LoginHandler::class,
+        ],
+        ['GET', 'POST'],
+        Handler\LoginHandler::ROUTE_NAME
+    );
+    $app->get(
+        Handler\LogoutHandler::ROUTE,
+        [
+            Handler\LogoutHandler::class,
+        ],
+        Handler\LogoutHandler::ROUTE_NAME
+    );
     $app->get(
         Handler\GetDataHandler::ROUTE,
-        Handler\GetDataHandler::class,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Handler\GetDataHandler::class,
+        ],
         Handler\GetDataHandler::ROUTE_NAME
     );
-    $app->get(Handler\PingHandler::ROUTE, Handler\PingHandler::class, Handler\PingHandler::ROUTE_NAME);
     $app->post(
         Handler\SaveHandler::ROUTE,
         [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
             BodyParamsMiddleware::class,
             Handler\SaveHandler::class,
         ],
@@ -51,7 +83,11 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     );
     $app->post(
         Handler\UploadHandler::ROUTE,
-        Handler\UploadHandler::class,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Handler\UploadHandler::class,
+        ],
         Handler\UploadHandler::ROUTE_NAME
     );
 };
