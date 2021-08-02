@@ -20,7 +20,7 @@ final class Element
     private $isLongText;
 
     /**
-     * @var string
+     * @var null|string
      */
     private $label;
 
@@ -49,7 +49,7 @@ final class Element
         bool $isLongText,
         ?string $longText,
         ?string $mediaType,
-        string $label,
+        ?string $label,
         bool $triggerWarning,
         ?string $url
     ) {
@@ -64,7 +64,9 @@ final class Element
 
     public static function createFromArray(array $values) : self
     {
-        if (isset($values['label']) === false || $values['label'] === '') {
+        if ((isset($values['url']) === false || $values['url'] === '') &&
+            (isset($values['label']) === false || $values['label'] === '')
+        ) {
             throw new InvalidArgumentException('Label missing for node/element');
         }
 
@@ -78,12 +80,17 @@ final class Element
             $url = null;
         }
 
+        $label = $values['label'] ?? null;
+        if ($label === '') {
+            $label = null;
+        }
+
         return new self(
             $values['isLocation'] ?? false,
             $values['isLongText'] ?? false,
             $values['longText'] ?? null,
             $mediaType,
-            $values['label'],
+            $label,
             $values['triggerWarning'] ?? false,
             $url
         );
@@ -109,7 +116,7 @@ final class Element
         return $this->mediaType;
     }
 
-    public function getLabel() : string
+    public function getLabel() : ?string
     {
         return $this->label;
     }
