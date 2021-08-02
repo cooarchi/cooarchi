@@ -73,6 +73,11 @@ final class Element
             $mediaType = null;
         }
 
+        $url = $values['url'] ?? null;
+        if ($url === '') {
+            $url = null;
+        }
+
         return new self(
             $values['isLocation'] ?? false,
             $values['isLongText'] ?? false,
@@ -80,7 +85,7 @@ final class Element
             $mediaType,
             $values['label'],
             $values['triggerWarning'] ?? false,
-            $values['url'] ?? null
+            $url
         );
     }
 
