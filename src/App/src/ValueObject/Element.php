@@ -6,6 +6,8 @@ namespace CooarchiApp\ValueObject;
 
 
 use InvalidArgumentException;
+use function is_string;
+use function trim;
 
 final class Element
 {
@@ -64,25 +66,26 @@ final class Element
 
     public static function createFromArray(array $values) : self
     {
-        if ((isset($values['url']) === false || $values['url'] === '') &&
-            (isset($values['label']) === false || $values['label'] === '')
-        ) {
+        $url = $values['url'] ?? null;
+        if (is_string($url) === true) {
+            $url = trim($url);
+            if ($url === '') {
+                $url = null;
+            }
+        }
+
+        $label = $values['label'] ?? null;
+        if ($label === '') {
+            $label = null;
+        }
+
+        if ($url === null && $label === '') {
             throw new InvalidArgumentException('Label missing for node/element');
         }
 
         $mediaType = $values['mediaType'] ?? null;
         if ($mediaType === \CooarchiEntities\Element::MEDIA_TYPE_NONE) {
             $mediaType = null;
-        }
-
-        $url = $values['url'] ?? null;
-        if (empty($url) === true) {
-            $url = null;
-        }
-
-        $label = $values['label'] ?? null;
-        if ($label === '') {
-            $label = null;
         }
 
         return new self(

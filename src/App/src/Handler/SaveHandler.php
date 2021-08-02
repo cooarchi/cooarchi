@@ -84,7 +84,7 @@ class SaveHandler implements RequestHandlerInterface
             foreach ($bodyAttributes['nodes'] ?? [] as $elementData) {
                 $elementValues = ValueObject\Element::createFromArray($elementData);
                 $elementKey = $elementValues->getLabel();
-                if ($elementValues->getUrl() !== null) {
+                if ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
                     $elementKey = $elementValues->getUrl();
                 }
                 $elements[$elementKey] = $elementValues;
@@ -114,7 +114,7 @@ class SaveHandler implements RequestHandlerInterface
             if (isset($elements[$sourceKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for source label: ' .  $sourceLabel], 500);
             }
-            if ($targetLabel !== '' && isset($elements[$targetKey]) === false) {
+            if ($targetKey !== '' && isset($elements[$targetKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetLabel], 500);
             }
 
