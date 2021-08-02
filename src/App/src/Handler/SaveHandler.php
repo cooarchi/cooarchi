@@ -121,7 +121,12 @@ class SaveHandler implements RequestHandlerInterface
             $elementFromValues = $elements[$sourceKey];
             $elementToValues = $elements[$targetKey] ?? null;
 
-            $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
+            if ($elementFromValues->getLabel() === null && $elementFromValues->getUrl() !== null) {
+                $elementFrom = $this->findElementQuery->byFilePath($elementFromValues->getUrl());
+            } else {
+                $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
+            }
+
 
             // Element From only case
             if ($targetLabel === null || $targetLabel === '') {
