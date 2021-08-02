@@ -97,13 +97,15 @@ class SaveHandler implements RequestHandlerInterface
             );
 
             $sourceKey = $sourceLabel;
-            if ($relationAttributes['source']['isFile'] === true &&
+            if (isset($relationAttributes['source']['isFile']) === true &&
+                $relationAttributes['source']['isFile'] === true &&
                 $relationAttributes['source']['url'] !== ''
             ) {
                 $sourceKey = $relationAttributes['source']['url'];
             }
             $targetKey = $targetLabel;
-            if ($relationAttributes['target']['isFile'] === true &&
+            if (isset($relationAttributes['target']['isFile']) === true &&
+                $relationAttributes['target']['isFile'] === true &&
                 $relationAttributes['target']['url'] !== ''
             ) {
                 $targetKey = $relationAttributes['target']['url'];
