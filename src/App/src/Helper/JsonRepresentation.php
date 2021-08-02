@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CooarchiApp\Helper;
 
 use CooarchiEntities;
-use function sprintf;
 
 final class JsonRepresentation
 {
@@ -28,7 +27,7 @@ final class JsonRepresentation
                 'longText' => $element->getLongText(),
                 'mediaType' => $element->getMediaType(),
                 'triggerWarning' => $element->hasTriggerWarning(),
-                'url' => sprintf('/files/%s', $element->getFilePath()),
+                'url' => $element->getFilePath(),
             ];
             $json['nodes'][] = $node;
         }
