@@ -106,7 +106,12 @@ class UploadHandler implements RequestHandlerInterface
     private function getFileExtension(string $mimeType) : string
     {
         switch ($mimeType) {
+            case 'audio/mp3' :
+                return 'mp3';
+            case 'audio/wav' :
+                return 'wav';
             case 'image/jpeg' :
+            case 'image/jpg' :
                 return 'jpg';
             case 'image/png' :
                 return 'png';
