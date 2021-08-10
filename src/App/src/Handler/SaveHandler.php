@@ -155,10 +155,11 @@ class SaveHandler implements RequestHandlerInterface
                 $this->entityManager->persist($elementFrom);
                 $newElementCheck = true;
             }
-            if ($sourceLabel === $targetLabel) {
+            if ($sourceLabel === $targetLabel &&
+                $elementFromValues->getUrl() === null && $elementToValues->getUrl() === null
+            ) {
                 $elementTo = $elementFrom;
-            }
-            elseif ($elementTo === null) {
+            } elseif ($elementTo === null) {
                 $elementTo = $this->createElement($elementToValues);
                 $this->entityManager->persist($elementTo);
                 $newElementCheck = true;
