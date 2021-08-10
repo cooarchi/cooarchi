@@ -52,6 +52,11 @@ class SaveHandler implements RequestHandlerInterface
      */
     private $uuidFactory;
 
+    /**
+     * @var ValidatorInterface
+     */
+    private $uuidValidator;
+
     public function __construct(
         EntityManager $entityManager,
         CooarchiQueries\FindElement $findElementQuery,
@@ -64,6 +69,7 @@ class SaveHandler implements RequestHandlerInterface
         $this->findElementRelationQuery = $findElementRelationQuery;
         $this->findRelationLabelQuery = $findRelationLabelQuery;
         $this->uuidFactory = $uuidFactory;
+        $this->uuidValidator = $uuidFactory->getValidator();
     }
 
     /**
@@ -78,7 +84,6 @@ class SaveHandler implements RequestHandlerInterface
 
         try {
             $bodyAttributes = $request->getParsedBody();
-            $uuidValidator = $this->uuidFactory->getValidator();
 
             $relationAttributes = $bodyAttributes['links'][0] ?? [];
             if ($relationAttributes === []) {
@@ -90,7 +95,7 @@ class SaveHandler implements RequestHandlerInterface
                 $elementValues = ValueObject\Element::createFromArray($elementData);
                 $elementKey = $elementValues->getLabel();
                 if ($elementValues->getElementId() !== null &&
-                    $uuidValidator->validate($elementValues->getElementId()) === true
+                    $this->uuidValidator->validate($elementValues->getElementId()) === true
                 ) {
                     $elementKey = $elementValues->getElementId();
                 } elseif ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
@@ -102,8 +107,8 @@ class SaveHandler implements RequestHandlerInterface
             $sourceLabel = $relationAttributes['source']['label'];
             $targetLabel = $relationAttributes['target']['label'];
 
-            $sourceKey = $this->getElementKey($uuidValidator, $sourceLabel, self::RELATION_TYPE_SOURCE);
-            $targetKey = $this->getElementKey($uuidValidator, $targetLabel, self::RELATION_TYPE_TARGET);
+            $sourceKey = $this->getElementKey($relationAttributes, $sourceLabel, self::RELATION_TYPE_SOURCE);
+            $targetKey = $this->getElementKey($relationAttributes, $targetLabel, self::RELATION_TYPE_TARGET);
 
             $relationDescription = trim(
                 (string) filter_var($relationAttributes['label'], FILTER_SANITIZE_STRING)
@@ -234,26 +239,28 @@ class SaveHandler implements RequestHandlerInterface
         return $element;
     }
 
-    private function getElementKey(ValidatorInterface $uuidValidator, ?string $label, string $type) : ?string
+    private function getElementKey(array $relationAttributes, ?string $label, string $type) : ?string
     {
-        $key = $label;
-
         if (isset($relationAttributes[$type]['id']) === true &&
-            $uuidValidator->validate($relationAttributes[$type]['id']) === true
+            $this->uuidValidator->validate($relationAttributes[$type]['id']) === true
         ) {
-            $key = $relationAttributes[$type]['id'];
-        } elseif (isset($relationAttributes[$type]['isFile']) === true &&
+            return $relationAttributes[$type]['id'];
+        }
+
+        if (isset($relationAttributes[$type]['isFile']) === true &&
             $relationAttributes[$type]['isFile'] === true &&
             $relationAttributes[$type]['url'] !== ''
         ) {
-            $key = $relationAttributes[$type]['url'];
-        } elseif (isset($relationAttributes[$type]['isLongText']) === true &&
+            return $relationAttributes[$type]['url'];
+        }
+
+        if (isset($relationAttributes[$type]['isLongText']) === true &&
             $relationAttributes[$type]['isLongText'] === true &&
             $relationAttributes[$type]['longText'] !== ''
         ) {
-            $key = $relationAttributes[$type]['longText'];
+            return $relationAttributes[$type]['longText'];
         }
 
-        return $key;
+        return $label;
     }
 }
