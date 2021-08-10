@@ -26,4 +26,14 @@ final class FindElement extends Base
 
         return $query->getOneOrNullResult();
     }
+
+    public function byPubId(string $pubId) : ?CooarchiEntities\Element
+    {
+        $query = $this->entityManager->createQuery("
+            SELECT elements FROM CooarchiEntities\Element elements WHERE elements.pubId = :pubId
+        ");
+        $query->setParameter('pubId', $pubId);
+
+        return $query->getOneOrNullResult();
+    }
 }
