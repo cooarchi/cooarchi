@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\Validator\ValidatorInterface;
 use function filter_var;
 use function trim;
 
@@ -22,6 +23,9 @@ class SaveHandler implements RequestHandlerInterface
 {
     public const ROUTE = '/save';
     public const ROUTE_NAME = 'save';
+
+    private const RELATION_TYPE_SOURCE = 'source';
+    private const RELATION_TYPE_TARGET = 'target';
 
     /**
      * @var EntityManager
@@ -97,32 +101,13 @@ class SaveHandler implements RequestHandlerInterface
 
             $sourceLabel = $relationAttributes['source']['label'];
             $targetLabel = $relationAttributes['target']['label'];
+
+            $sourceKey = $this->getElementKey($uuidValidator, $sourceLabel, self::RELATION_TYPE_SOURCE);
+            $targetKey = $this->getElementKey($uuidValidator, $targetLabel, self::RELATION_TYPE_TARGET);
+
             $relationDescription = trim(
                 (string) filter_var($relationAttributes['label'], FILTER_SANITIZE_STRING)
             );
-
-            $sourceKey = $sourceLabel;
-            if (isset($relationAttributes['source']['id']) === true &&
-                $uuidValidator->validate($relationAttributes['source']['id']) === true
-            ) {
-                $sourceKey = $relationAttributes['source']['id'];
-            } elseif (isset($relationAttributes['source']['isFile']) === true &&
-                $relationAttributes['source']['isFile'] === true &&
-                $relationAttributes['source']['url'] !== ''
-            ) {
-                $sourceKey = $relationAttributes['source']['url'];
-            }
-            $targetKey = $targetLabel;
-            if (isset($relationAttributes['target']['id']) === true &&
-                $uuidValidator->validate($relationAttributes['target']['id']) === true
-            ) {
-                $targetKey = $relationAttributes['target']['id'];
-            } elseif (isset($relationAttributes['target']['isFile']) === true &&
-                $relationAttributes['target']['isFile'] === true &&
-                $relationAttributes['target']['url'] !== ''
-            ) {
-                $targetKey = $relationAttributes['target']['url'];
-            }
 
             if (isset($elements[$sourceKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for source key: ' .  $sourceKey], 500);
@@ -231,14 +216,44 @@ class SaveHandler implements RequestHandlerInterface
 
     private function findExistingElement(ValueObject\Element $elementValues) : ?CooarchiEntities\Element
     {
-        if ($elementValues->getElementId() !== null) {
-            $element = $this->findElementQuery->byPubId($elementValues->getElementId());
-        } elseif ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
-            $element = $this->findElementQuery->byFilePath($elementValues->getUrl());
+        $elementId = $elementValues->getElementId();
+        $label = $elementValues->getLabel();
+        $longText = $elementValues->getLongText();
+        $url = $elementValues->getUrl();
+
+        if ($elementId !== null) {
+            $element = $this->findElementQuery->byPubId($elementId);
+        } elseif ($label === null && $url !== null) {
+            $element = $this->findElementQuery->byFilePath($url);
+        } elseif ($label === null && $url === null && $longText !== null) {
+            $element = $this->findElementQuery->byLongText($longText);
         } else {
-            $element = $this->findElementQuery->byInfo($elementValues->getLabel());
+            $element = $this->findElementQuery->byInfo($label);
         }
 
         return $element;
+    }
+
+    private function getElementKey(ValidatorInterface $uuidValidator, ?string $label, string $type) : ?string
+    {
+        $key = $label;
+
+        if (isset($relationAttributes[$type]['id']) === true &&
+            $uuidValidator->validate($relationAttributes[$type]['id']) === true
+        ) {
+            $key = $relationAttributes[$type]['id'];
+        } elseif (isset($relationAttributes[$type]['isFile']) === true &&
+            $relationAttributes[$type]['isFile'] === true &&
+            $relationAttributes[$type]['url'] !== ''
+        ) {
+            $key = $relationAttributes[$type]['url'];
+        } elseif (isset($relationAttributes[$type]['isLongText']) === true &&
+            $relationAttributes[$type]['isLongText'] === true &&
+            $relationAttributes[$type]['longText'] !== ''
+        ) {
+            $key = $relationAttributes[$type]['longText'];
+        }
+
+        return $key;
     }
 }
