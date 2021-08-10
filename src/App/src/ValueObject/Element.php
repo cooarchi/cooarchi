@@ -4,13 +4,22 @@ declare(strict_types=1);
 
 namespace CooarchiApp\ValueObject;
 
-
 use InvalidArgumentException;
 use function is_string;
 use function trim;
 
 final class Element
 {
+    /**
+     * @var null|string
+     */
+    private $elementId;
+
+    /**
+     * @var bool
+     */
+    private $isCoreElement;
+
     /**
      * @var bool
      */
@@ -47,14 +56,18 @@ final class Element
     private $url;
 
     private function __construct(
+        bool $isCoreElement,
         bool $isLocation,
         bool $isLongText,
         ?string $longText,
         ?string $mediaType,
         ?string $label,
         bool $triggerWarning,
-        ?string $url
+        ?string $url,
+        ?string $elementId
     ) {
+        $this->elementId = $elementId;
+        $this->isCoreElement = $isCoreElement;
         $this->isLocation = $isLocation;
         $this->isLongText = $isLongText;
         $this->longText = $longText;
@@ -88,15 +101,24 @@ final class Element
             $mediaType = null;
         }
 
+        $elementId = $values['id'] ?? null;
+
         return new self(
+            $values['isCoreElement'] ?? false,
             $values['isLocation'] ?? false,
             $values['isLongText'] ?? false,
             $values['longText'] ?? null,
             $mediaType,
             $label,
             $values['triggerWarning'] ?? false,
-            $url
+            $url,
+            $elementId
         );
+    }
+
+    public function isCoreElement() : bool
+    {
+        return $this->isCoreElement;
     }
 
     public function isLocation() : bool
@@ -107,6 +129,11 @@ final class Element
     public function isLongText() : bool
     {
         return $this->isLongText;
+    }
+
+    public function getElementId() : ?string
+    {
+        return $this->elementId;
     }
 
     public function getLongText() : ?string

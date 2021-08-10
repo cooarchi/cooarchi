@@ -74,6 +74,7 @@ class SaveHandler implements RequestHandlerInterface
 
         try {
             $bodyAttributes = $request->getParsedBody();
+            $uuidValidator = $this->uuidFactory->getValidator();
 
             $relationAttributes = $bodyAttributes['links'][0] ?? [];
             if ($relationAttributes === []) {
@@ -84,7 +85,11 @@ class SaveHandler implements RequestHandlerInterface
             foreach ($bodyAttributes['nodes'] ?? [] as $elementData) {
                 $elementValues = ValueObject\Element::createFromArray($elementData);
                 $elementKey = $elementValues->getLabel();
-                if ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
+                if ($elementValues->getElementId() !== null &&
+                    $uuidValidator->validate($elementValues->getElementId()) === true
+                ) {
+                    $elementKey = $elementValues->getElementId();
+                } elseif ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
                     $elementKey = $elementValues->getUrl();
                 }
                 $elements[$elementKey] = $elementValues;
@@ -97,14 +102,22 @@ class SaveHandler implements RequestHandlerInterface
             );
 
             $sourceKey = $sourceLabel;
-            if (isset($relationAttributes['source']['isFile']) === true &&
+            if (isset($relationAttributes['source']['id']) === true &&
+                $uuidValidator->validate($relationAttributes['source']['id']) === true
+            ) {
+                $sourceKey = $relationAttributes['source']['id'];
+            } elseif (isset($relationAttributes['source']['isFile']) === true &&
                 $relationAttributes['source']['isFile'] === true &&
                 $relationAttributes['source']['url'] !== ''
             ) {
                 $sourceKey = $relationAttributes['source']['url'];
             }
             $targetKey = $targetLabel;
-            if (isset($relationAttributes['target']['isFile']) === true &&
+            if (isset($relationAttributes['target']['id']) === true &&
+                $uuidValidator->validate($relationAttributes['target']['id']) === true
+            ) {
+                $targetKey = $relationAttributes['target']['id'];
+            } elseif (isset($relationAttributes['target']['isFile']) === true &&
                 $relationAttributes['target']['isFile'] === true &&
                 $relationAttributes['target']['url'] !== ''
             ) {
@@ -112,24 +125,19 @@ class SaveHandler implements RequestHandlerInterface
             }
 
             if (isset($elements[$sourceKey]) === false) {
-                return new JsonResponse(['error' => 'Node data missing for source label: ' .  $sourceLabel], 500);
+                return new JsonResponse(['error' => 'Node data missing for source key: ' .  $sourceKey], 500);
             }
             if ($targetKey !== '' && isset($elements[$targetKey]) === false) {
-                return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetLabel], 500);
+                return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetKey], 500);
             }
 
             $elementFromValues = $elements[$sourceKey];
             $elementToValues = $elements[$targetKey] ?? null;
 
-            if ($elementFromValues->getLabel() === null && $elementFromValues->getUrl() !== null) {
-                $elementFrom = $this->findElementQuery->byFilePath($elementFromValues->getUrl());
-            } else {
-                $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
-            }
-
+            $elementFrom = $this->findExistingElement($elementFromValues);
 
             // Element From only case
-            if ($targetLabel === null || $targetLabel === '') {
+            if ($targetKey === null || $targetKey === '') {
                 if ($elementFrom === null) {
                     $elementFrom = $this->createElement($elementFromValues);
                     $this->entityManager->persist($elementFrom);
@@ -141,7 +149,8 @@ class SaveHandler implements RequestHandlerInterface
                 );
             }
 
-            $elementTo = $this->findElementQuery->byInfo($elementToValues->getLabel());
+            $elementTo = $this->findExistingElement($elementToValues);
+
             $relationLabel = $this->findRelationLabelQuery->byDescription($relationDescription);
             $newElementCheck = false;
 
@@ -150,10 +159,11 @@ class SaveHandler implements RequestHandlerInterface
                 $this->entityManager->persist($elementFrom);
                 $newElementCheck = true;
             }
-            if ($sourceLabel === $targetLabel) {
+            if ($sourceLabel === $targetLabel &&
+                $elementFromValues->getUrl() === null && $elementToValues->getUrl() === null
+            ) {
                 $elementTo = $elementFrom;
-            }
-            elseif ($elementTo === null) {
+            } elseif ($elementTo === null) {
                 $elementTo = $this->createElement($elementToValues);
                 $this->entityManager->persist($elementTo);
                 $newElementCheck = true;
@@ -207,7 +217,7 @@ class SaveHandler implements RequestHandlerInterface
 
         return new CooarchiEntities\Element(
             $this->uuidFactory->uuid1(),
-            false,
+            $elementValues->isCoreElement(),
             $isFile,
             $elementValues->isLocation(),
             $elementValues->isLongText(),
@@ -217,5 +227,18 @@ class SaveHandler implements RequestHandlerInterface
             $elementValues->getUrl(),
             $elementValues->getMediaType()
         );
+    }
+
+    private function findExistingElement(ValueObject\Element $elementValues) : ?CooarchiEntities\Element
+    {
+        if ($elementValues->getElementId() !== null) {
+            $element = $this->findElementQuery->byPubId($elementValues->getElementId());
+        } elseif ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
+            $element = $this->findElementQuery->byFilePath($elementValues->getUrl());
+        } else {
+            $element = $this->findElementQuery->byInfo($elementValues->getLabel());
+        }
+
+        return $element;
     }
 }
