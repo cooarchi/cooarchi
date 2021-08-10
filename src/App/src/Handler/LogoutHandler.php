@@ -35,6 +35,6 @@ final class LogoutHandler implements RequestHandlerInterface
     {
         $this->authenticationService->clearIdentity();
 
-        return new RedirectResponse($this->urlHelper->generate('admin.login'));
+        return new RedirectResponse($this->urlHelper->generate(HomeHandler::ROUTE_NAME));
     }
 }

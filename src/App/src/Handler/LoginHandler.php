@@ -58,6 +58,10 @@ final class LoginHandler implements RequestHandlerInterface
             return $this->authenticate($request);
         }
 
+        if ($this->authenticationService->hasIdentity() === true) {
+            return new RedirectResponse($this->urlHelper->generate(HomeHandler::ROUTE_NAME));
+        }
+
         return new HtmlResponse($this->template->render(self::TEMPLATE, []));
     }
 
@@ -108,6 +112,6 @@ final class LoginHandler implements RequestHandlerInterface
             );
         }
 
-        return new RedirectResponse($this->urlHelper->generate(HomeHandler::ROUTE));
+        return new RedirectResponse($this->urlHelper->generate(HomeHandler::ROUTE_NAME));
     }
 }
