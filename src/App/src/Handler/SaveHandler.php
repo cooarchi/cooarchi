@@ -129,7 +129,7 @@ class SaveHandler implements RequestHandlerInterface
 
 
             // Element From only case
-            if ($targetLabel === null || $targetLabel === '') {
+            if ($targetKey === null || $targetKey === '') {
                 if ($elementFrom === null) {
                     $elementFrom = $this->createElement($elementFromValues);
                     $this->entityManager->persist($elementFrom);
