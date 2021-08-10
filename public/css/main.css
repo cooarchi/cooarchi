@@ -4,11 +4,10 @@ body {
     position: relative;
 }
 body {
-    background-color: #000000;
-    background-image: url('/img/start_raeuberinnenhoehle.jpg');
-    background-position: center top;
+    background-color: #fff;
     background-size: 100% auto;
     background-repeat: no-repeat;
+    color: #000;
     padding-top: 70px;
     margin-bottom: 800px;
 }
@@ -143,6 +142,24 @@ body.visualisation table tr td {
     top: 10px;
     left: 10px;
 }
+
+.help-block {
+    color: darkred;
+}
+
+button.btn {
+    border: 1px solid #000;
+    color: #000;
+    padding: 10px;
+}
+button.btn:hover {
+    border: 1px solid #000;
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+}
+
+
 
 body .app-footer {
     display: none;
