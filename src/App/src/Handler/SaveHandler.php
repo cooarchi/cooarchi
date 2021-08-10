@@ -141,7 +141,12 @@ class SaveHandler implements RequestHandlerInterface
                 );
             }
 
-            $elementTo = $this->findElementQuery->byInfo($elementToValues->getLabel());
+            if ($elementToValues->getLabel() === null && $elementToValues->getUrl() !== null) {
+                $elementTo = $this->findElementQuery->byFilePath($elementToValues->getUrl());
+            } else {
+                $elementTo = $this->findElementQuery->byInfo($elementToValues->getLabel());
+            }
+
             $relationLabel = $this->findRelationLabelQuery->byDescription($relationDescription);
             $newElementCheck = false;
 
