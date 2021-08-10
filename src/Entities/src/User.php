@@ -25,7 +25,8 @@ use Ramsey\Uuid\Uuid;
 class User
 {
     public const ROLE_ADMINISTRATA = 'administrata';
-    public const ROLE_KOLLEKTIVISTA= 'kollektivista';
+    public const ROLE_KOLLEKTIVISTA = 'kollektivista';
+    public const ROLE_TRAVELLA = 'travella';
 
     /**
      * @ORM\Column(name="id", type="guid")
@@ -62,7 +63,7 @@ class User
     public function __construct(
         string $name,
         string $password,
-        string $role = self::ROLE_KOLLEKTIVISTA
+        string $role = self::ROLE_TRAVELLA
     ) {
         if ($name !== null && mb_strlen($name, ConfigProvider::ENCODING) > 240) {
             throw new InvalidArgumentException('name text is too long (> 240 chars)');
@@ -70,7 +71,10 @@ class User
         if ($password !== null && mb_strlen($name, ConfigProvider::ENCODING) > 128) {
             throw new InvalidArgumentException('password text is too long (> 128 chars)');
         }
-        if ($role !== self::ROLE_ADMINISTRATA && $role !== self::ROLE_KOLLEKTIVISTA) {
+        if ($role !== self::ROLE_ADMINISTRATA &&
+            $role !== self::ROLE_KOLLEKTIVISTA &&
+            $role !== self::ROLE_TRAVELLA
+        ) {
             throw new InvalidArgumentException('provided role is invalid');
         }
 
