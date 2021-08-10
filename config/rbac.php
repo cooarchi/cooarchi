@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 use CooarchiApp\Handler;
-use CooarchiEntities;
 
 return [
     'roles' => [
