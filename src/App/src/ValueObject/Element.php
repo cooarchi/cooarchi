@@ -6,6 +6,8 @@ namespace CooarchiApp\ValueObject;
 
 
 use InvalidArgumentException;
+use function is_string;
+use function trim;
 
 final class Element
 {
@@ -20,7 +22,7 @@ final class Element
     private $isLongText;
 
     /**
-     * @var string
+     * @var null|string
      */
     private $label;
 
@@ -49,7 +51,7 @@ final class Element
         bool $isLongText,
         ?string $longText,
         ?string $mediaType,
-        string $label,
+        ?string $label,
         bool $triggerWarning,
         ?string $url
     ) {
@@ -64,7 +66,20 @@ final class Element
 
     public static function createFromArray(array $values) : self
     {
-        if (isset($values['label']) === false || $values['label'] === '') {
+        $url = $values['url'] ?? null;
+        if (is_string($url) === true) {
+            $url = trim($url);
+            if ($url === '') {
+                $url = null;
+            }
+        }
+
+        $label = $values['label'] ?? null;
+        if ($label === '') {
+            $label = null;
+        }
+
+        if ($url === null && $label === '') {
             throw new InvalidArgumentException('Label missing for node/element');
         }
 
@@ -78,9 +93,9 @@ final class Element
             $values['isLongText'] ?? false,
             $values['longText'] ?? null,
             $mediaType,
-            $values['label'],
+            $label,
             $values['triggerWarning'] ?? false,
-            $values['url'] ?? null
+            $url
         );
     }
 
@@ -104,7 +119,7 @@ final class Element
         return $this->mediaType;
     }
 
-    public function getLabel() : string
+    public function getLabel() : ?string
     {
         return $this->label;
     }

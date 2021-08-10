@@ -83,26 +83,50 @@ class SaveHandler implements RequestHandlerInterface
             $elements = [];
             foreach ($bodyAttributes['nodes'] ?? [] as $elementData) {
                 $elementValues = ValueObject\Element::createFromArray($elementData);
-                $elements[$elementValues->getLabel()] = $elementValues;
+                $elementKey = $elementValues->getLabel();
+                if ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
+                    $elementKey = $elementValues->getUrl();
+                }
+                $elements[$elementKey] = $elementValues;
             }
 
             $sourceLabel = $relationAttributes['source']['label'];
-            $targetLabel = $relationAttributes['target']['label'] ?? null;
+            $targetLabel = $relationAttributes['target']['label'];
             $relationDescription = trim(
                 (string) filter_var($relationAttributes['label'], FILTER_SANITIZE_STRING)
             );
 
-            if (isset($elements[$sourceLabel]) === false) {
+            $sourceKey = $sourceLabel;
+            if (isset($relationAttributes['source']['isFile']) === true &&
+                $relationAttributes['source']['isFile'] === true &&
+                $relationAttributes['source']['url'] !== ''
+            ) {
+                $sourceKey = $relationAttributes['source']['url'];
+            }
+            $targetKey = $targetLabel;
+            if (isset($relationAttributes['target']['isFile']) === true &&
+                $relationAttributes['target']['isFile'] === true &&
+                $relationAttributes['target']['url'] !== ''
+            ) {
+                $targetKey = $relationAttributes['target']['url'];
+            }
+
+            if (isset($elements[$sourceKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for source label: ' .  $sourceLabel], 500);
             }
-            if ($targetLabel !== null && isset($elements[$targetLabel]) === false) {
+            if ($targetKey !== '' && isset($elements[$targetKey]) === false) {
                 return new JsonResponse(['error' => 'Node data missing for target label: ' .  $targetLabel], 500);
             }
 
-            $elementFromValues = $elements[$sourceLabel];
-            $elementToValues = $elements[$targetLabel] ?? null;
+            $elementFromValues = $elements[$sourceKey];
+            $elementToValues = $elements[$targetKey] ?? null;
 
-            $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
+            if ($elementFromValues->getLabel() === null && $elementFromValues->getUrl() !== null) {
+                $elementFrom = $this->findElementQuery->byFilePath($elementFromValues->getUrl());
+            } else {
+                $elementFrom = $this->findElementQuery->byInfo($elementFromValues->getLabel());
+            }
+
 
             // Element From only case
             if ($targetLabel === null || $targetLabel === '') {
