@@ -213,7 +213,7 @@ class SaveHandler implements RequestHandlerInterface
 
         return new CooarchiEntities\Element(
             $this->uuidFactory->uuid1(),
-            false,
+            $elementValues->isCoreElement(),
             $isFile,
             $elementValues->isLocation(),
             $elementValues->isLongText(),

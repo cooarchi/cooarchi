@@ -14,6 +14,11 @@ final class Element
     /**
      * @var bool
      */
+    private $isCoreElement;
+
+    /**
+     * @var bool
+     */
     private $isLocation;
 
     /**
@@ -47,6 +52,7 @@ final class Element
     private $url;
 
     private function __construct(
+        bool $isCoreElement,
         bool $isLocation,
         bool $isLongText,
         ?string $longText,
@@ -55,6 +61,7 @@ final class Element
         bool $triggerWarning,
         ?string $url
     ) {
+        $this->isCoreElement = $isCoreElement;
         $this->isLocation = $isLocation;
         $this->isLongText = $isLongText;
         $this->longText = $longText;
@@ -89,6 +96,7 @@ final class Element
         }
 
         return new self(
+            $values['isCoreElement'] ?? false,
             $values['isLocation'] ?? false,
             $values['isLongText'] ?? false,
             $values['longText'] ?? null,
@@ -97,6 +105,11 @@ final class Element
             $values['triggerWarning'] ?? false,
             $url
         );
+    }
+
+    public function isCoreElement() : bool
+    {
+        return $this->isCoreElement;
     }
 
     public function isLocation() : bool
