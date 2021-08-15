@@ -8,13 +8,15 @@
         <div class="col-md-12">
             <!-- <h1></h1> -->
             <div class="cooarchi">
-                <h2>cooArchi</h2>
-                <h3>community oriented archiving interface</h3>
+                <h1>cooArchi</h1>
+                <h2>community oriented archiving interface</h2>
             </div>
             <p>
                 wir schreibt Geschichte
             </p>
-            <p><a href="/enter">enter</a></p>
+            <p class="links">
+                <a href="{{ path('login') }}">enter</a> | {% if identity is not empty %}<a href="{{ path('logout') }}">logout</a>{% else %}<a href="{{ path('login') }}">login</a>{% endif %}
+            </p>
         </div>
     </div>
 
