@@ -38,6 +38,7 @@ class ConfigProvider
     {
         return [
             'invokables' => [
+                Handler\AuthStatusHandler::class => Handler\AuthStatusHandler::class,
                 Handler\PingHandler::class => Handler\PingHandler::class,
                 Middleware\SlimFlashMiddleware::class => Middleware\SlimFlashMiddleware::class,
             ],
@@ -49,6 +50,7 @@ class ConfigProvider
                 Handler\LoginHandler::class => Handler\LoginHandlerFactory::class,
                 Handler\LogoutHandler::class => Handler\LogoutHandlerFactory::class,
                 Handler\SaveHandler::class => Handler\SaveHandlerFactory::class,
+                Handler\SettingsHandler::class => Handler\SettingsHandlerFactory::class,
                 Handler\UploadHandler::class => Handler\UploadHandlerFactory::class,
                 Middleware\AuthMiddleware::class => Middleware\AuthFactory::class,
                 Middleware\PermissionMiddleware::class => Middleware\PermissionFactory::class,

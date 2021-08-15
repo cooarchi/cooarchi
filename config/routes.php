@@ -90,4 +90,17 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         ],
         Handler\UploadHandler::ROUTE_NAME
     );
+    $app->get(
+        Handler\SettingsHandler::ROUTE,
+        Handler\SettingsHandler::class,
+        Handler\SettingsHandler::ROUTE_NAME
+    );
+    $app->get(
+        Handler\AuthStatusHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Handler\AuthStatusHandler::class,
+        ],
+        Handler\AuthStatusHandler::ROUTE_NAME
+    );
 };
