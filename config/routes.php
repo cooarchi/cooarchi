@@ -44,7 +44,10 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     );
     $app->get(
         Handler\HomeHandler::ROUTE,
-        Handler\HomeHandler::class,
+        [
+            Middleware\AuthMiddleware::class,
+            Handler\HomeHandler::class,
+        ],
         Handler\HomeHandler::ROUTE_NAME
     );
     $app->route(
