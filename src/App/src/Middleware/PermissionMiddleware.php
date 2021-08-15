@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CooarchiApp\Middleware;
 
 use CooarchiEntities;
-use Teapot\StatusCode;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Permissions\Rbac\Rbac;
 use Mezzio\Router\RouteResult;
@@ -13,6 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Teapot\StatusCode;
 
 final class PermissionMiddleware implements MiddlewareInterface
 {
@@ -38,13 +38,14 @@ final class PermissionMiddleware implements MiddlewareInterface
     {
         /** @var CooarchiEntities\User|false $user */
         $user = $request->getAttribute('identity', false);
+
         if ($user === false) {
             return new EmptyResponse(StatusCode\All::UNAUTHORIZED);
         }
 
         $route = $request->getAttribute(RouteResult::class);
         $routeName = $route->getMatchedRoute()->getName();
-        if (!$this->rbac->isGranted($user->getRole(), $routeName)) {
+        if ($this->rbac->isGranted($user->getRole(), $routeName) === false) {
             return new EmptyResponse(StatusCode\All::FORBIDDEN);
         }
 
