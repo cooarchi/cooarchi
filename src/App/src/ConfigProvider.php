@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CooarchiApp;
 
+use Laminas\Authentication\AuthenticationService;
 use function dirname;
 
 /**
@@ -25,8 +26,8 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'templates'    => $this->getTemplates(),
-            'basePath'     => dirname(__DIR__, 3),
+            'basePath' => dirname(__DIR__, 3),
+            'templates' => $this->getTemplates(),
         ];
     }
 
@@ -37,13 +38,22 @@ class ConfigProvider
     {
         return [
             'invokables' => [
+                Handler\AuthStatusHandler::class => Handler\AuthStatusHandler::class,
                 Handler\PingHandler::class => Handler\PingHandler::class,
+                Middleware\SlimFlashMiddleware::class => Middleware\SlimFlashMiddleware::class,
             ],
             'factories'  => [
+                AuthenticationService::class => Authentication\AuthenticationServiceFactory::class,
+                Authentication\Adapter::class => Authentication\AdapterFactory::class,
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
+                Handler\LoginHandler::class => Handler\LoginHandlerFactory::class,
+                Handler\LogoutHandler::class => Handler\LogoutHandlerFactory::class,
                 Handler\SaveHandler::class => Handler\SaveHandlerFactory::class,
+                Handler\SettingsHandler::class => Handler\SettingsHandlerFactory::class,
                 Handler\UploadHandler::class => Handler\UploadHandlerFactory::class,
+                Middleware\AuthMiddleware::class => Middleware\AuthFactory::class,
+                Middleware\PermissionMiddleware::class => Middleware\PermissionFactory::class,
             ],
         ];
     }
@@ -53,11 +63,14 @@ class ConfigProvider
      */
     public function getTemplates() : array
     {
+        $templatePath = dirname(__DIR__);
+
         return [
             'paths' => [
-                'app'    => [__DIR__ . '/../templates/app'],
-                'error'  => [__DIR__ . '/../templates/error'],
-                'layout' => [__DIR__ . '/../templates/layout'],
+                'app'    => [$templatePath . '/templates/app'],
+                'auth'   => [$templatePath . '/templates/auth'],
+                'error'  => [$templatePath . '/templates/error'],
+                'layout' => [$templatePath . '/templates/layout'],
             ],
         ];
     }

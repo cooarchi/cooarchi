@@ -29,7 +29,14 @@ class HomeHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $data = [];
-        // $this->templateRenderer->addDefaultParam(TemplateRendererInterface::TEMPLATE_ALL, 'identity', $user);
+
+        $user = $request->getAttribute('identity', false);
+
+        $this->template->addDefaultParam(
+            TemplateRendererInterface::TEMPLATE_ALL,
+            'identity',
+            $user
+        );
 
         return new HtmlResponse($this->template->render('app::home', $data));
     }

@@ -1,167 +1,90 @@
-
-body {
-    padding-top: 0;
-    position: relative;
-}
-body {
-    background-color: #000000;
-    background-image: url('/img/start_raeuberinnenhoehle.jpg');
-    background-position: center top;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    padding-top: 70px;
-    margin-bottom: 800px;
-}
-body.input {
-    background-color: #fff;
-    background-image: url('/img/input_raeuberinnenhoehle.png');
-    background-position: center top;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    padding-top: 70px;
-    margin-bottom: 1500px;
+@font-face{
+    font-family: "Lexend";
+    src: url(../font/LexendDeca-Regular.ttf);
 }
 
-body .start {
-    margin: 0 auto;
+html{
+    height:100%
+
+}
+:root {
+    --canvas-background: #FFF6DA;
+    --main-bg-color: #FFF6DA;
+    --sec-bg-color: #84F2D6;
+    --main-fg-color: #FC6B3F ;
+    --sec-fg-color: #262525;
+
+}
+
+body
+{
+    font-family: 'Lexend';
+    color: var(--sec-fg-color);
+    overscroll-behavior: none;
+    overscroll-behavior-y: contain;
+    -webkit-box-sizing: border-box; /* Safari, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+    width: 100%;
+
+    margin: 0 -3px 0 0;
+    overflow-x: hidden;
+    height: 100vh;
+    max-width: 100%;
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust:none;
+    -moz-text-size-adjust:none;
+    -ms-text-size-adjust:none;
+    -webkit-text-size-adjust:100%;
+    -moz-text-size-adjust:100%;
+    -ms-text-size-adjust:100%;
+    user-drag: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    overflow: hidden;
+    background-color: var(--canvas-background);
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+a {
+    color: var(--main-fg-color);
+}
+
+@media (orientation: landscape) {
+    body svg{
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (orientation: portrait) {
+    body svg{
+        width: auto;
+        height: 100%;
+    }
+}
+
+
+.app .start {
+    margin-top: 15rem;
     text-align: center;
 }
-
-body .start a,
-body .start h1,
-body .start h2,
-body .start h3,
-body .start p {
-    color: #f1f1f1;
-}
-body .start h1 {
-    font-weight: normal;
-    line-height: 60px;
-    margin-top: 120px;
-    margin-bottom: 50px;
-}
-body .start h1 span {
-    display: none;
-    font-size: 30px;
-}
-body .start .cooarchi-bck {
-    position: absolute;
-    bottom: -250px;
-    left: 340px;
-}
-body .start h2-bck {
-    font-weight: bold;
-    margin-bottom: 5px;
-    text-align: center;
-}
-body .start h3-bck {
-    color: #d1d1d1;
-    font-weight: lighter;
-    margin-bottom: 120px;
-}
-}
-body .start h2 {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-body .start h3 {
-    color: #d1d1d1;
-    font-weight: lighter;
-    margin-bottom: 120px;
-}
-body .start a {
-    border: 1px solid #f1f1f1;
-    padding: 10px;
-}
-body .start p {
-    font-size: 30px;
-    font-weight: normal;
-    margin-bottom: 50px;
-}
-body .inputForm {
-    width: 60%;
-    margin-top: 18%;
-    position: fixed;
-}
-body .inputForm .form-group {
-    position: relative;
-}
-body .inputForm .arrow {
-    position: absolute;
-    top: 5px;
-    right: -12px;
-
-}
-body .inputForm .arrow.first {
-    right: -7px;
-}
-body .inputForm input {
-    border-color: #333;
-    border-radius: 0;
-}
-body .inputForm input.fat {
-    border-width: 2px;
-}
-body .inputForm button {
-    background-color: #333;
-    border: 1px solid #333;
-    border-radius: 0;
-    color: #fff;
-    padding: 10px;
-}
-body .notificationMessages {
-    margin: 0 auto;
-    width: 90%;
-}
-body .notificationMessages .alert {
-    display: none;
-}
-body .notificationMessages .alert-success img {
-    margin-left: 20px;
+.app .start h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0 2rem;
 }
 
-body.visualisation {
-    background-color: #fff;
-    background-image: none;
-}
-body.visualisation table tr td {
-    padding: 5px;
-}
-#visualisationButton a {
-    border: 1px solid #000;
-    color: #000;
-    padding: 10px;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-}
-#inputButton a {
-    border: 1px solid #000;
-    color: #000;
-    padding: 10px;
-    position: absolute;
-    top: 10px;
-    left: 10px;
+.app .start p.links {
+    margin-top: 2rem;
 }
 
-body .app-footer {
-    display: none;
+#login {
+    margin-top: 10rem;
 }
-body.input .app-footer {
-    display: block;
-    color: #004f00;
-    font-size: 12px;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    text-align: center;
-}
-body.visualisation .app-footer {
-    display: block;
-    color: #004f00;
-    font-size: 12px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    text-align: center;
+.help-block {
+    color: var(--main-fg-color);
 }
