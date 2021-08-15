@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CooarchiApp\Middleware;
 
+use CooarchiApp\Handler\AuthStatusHandler;
+use CooarchiApp\Handler\HomeHandler;
+use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,28 +23,27 @@ final class AuthMiddleware implements MiddlewareInterface
     private $authenticationService;
 
     /**
-     * @var
-     */
-    private $isPublicReadable;
-
-    /**
      * @var UrlHelper
      */
     private $urlHelper;
 
     public function __construct(
         AuthenticationService $authenticationService,
-        UrlHelper $urlHelper,
-        bool $isPublicReadable
+        UrlHelper $urlHelper
     ) {
         $this->authenticationService = $authenticationService;
-        $this->isPublicReadable = $isPublicReadable;
         $this->urlHelper = $urlHelper;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate) : ResponseInterface
     {
-        if ($this->authenticationService->hasIdentity() === false) {
+        $route = $request->getAttribute(RouteResult::class);
+        $routeName = $route->getMatchedRoute()->getName();
+
+        if ($routeName !== HomeHandler::ROUTE_NAME &&
+            $routeName !== AuthStatusHandler::ROUTE_NAME &&
+            $this->authenticationService->hasIdentity() === false
+        ) {
             return new RedirectResponse($this->urlHelper->generate('login'));
         }
 

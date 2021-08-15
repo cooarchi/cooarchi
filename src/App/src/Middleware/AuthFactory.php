@@ -14,8 +14,7 @@ final class AuthFactory
     {
         return new AuthMiddleware(
             $container->get(AuthenticationService::class),
-            $container->get(UrlHelper::class),
-            $container->get('config')['isPublicReadable'] ?? false
+            $container->get(UrlHelper::class)
         );
     }
 }
