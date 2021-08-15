@@ -26,8 +26,8 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'templates'    => $this->getTemplates(),
-            'basePath'     => dirname(__DIR__, 3),
+            'basePath' => dirname(__DIR__, 3),
+            'templates' => $this->getTemplates(),
         ];
     }
 
@@ -61,12 +61,14 @@ class ConfigProvider
      */
     public function getTemplates() : array
     {
+        $templatePath = dirname(__DIR__);
+
         return [
             'paths' => [
-                'app'    => [__DIR__ . '/../templates/app'],
-                'auth'    => [__DIR__ . '/../templates/auth'],
-                'error'  => [__DIR__ . '/../templates/error'],
-                'layout' => [__DIR__ . '/../templates/layout'],
+                'app'    => [$templatePath . '/templates/app'],
+                'auth'   => [$templatePath . '/templates/auth'],
+                'error'  => [$templatePath . '/templates/error'],
+                'layout' => [$templatePath . '/templates/layout'],
             ],
         ];
     }
