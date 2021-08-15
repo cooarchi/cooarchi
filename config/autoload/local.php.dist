@@ -36,5 +36,15 @@ return [
          * new content can only be added by kollektivistA if set to `false`
          */
         'isPublicWriteable' => false,
+
+        /**
+         * url for frontend
+         */
+        'frontendUrl' => 'https://www.cooarchi.net',
+
+        /**
+         * url for backend
+         */
+        'backendUrl' => 'https://api.cooarchi.net',
     ],
 ];
