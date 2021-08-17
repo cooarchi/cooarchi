@@ -1,0 +1,64 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Invitations - cooArchi{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>Invitations - cooArchi</h1>
+            </div>
+            {% if error is defined and errorInput is not defined %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}
+            {% if success is defined %}
+                <div class="alert alert-success" role="alert">{{ success }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <fieldset id="invitations">
+                <form action="{{ path('invitations') }}" method="post">
+                    <div class="form-group{% if errorInput is defined and errorInput == "identifier" %} has-error{%  endif %}">
+                        <input type="text" id="identifier" name="identifier" value="{{ identifier | default('') | escape }}" placeholder="Identifier" class="form-control" />
+                        {% if errorInput is defined and errorInput == "identifier" %}
+                            <span class="help-block">{{ error | default('') | escape }}</span>
+                        {%  endif %}
+                    </div>
+                    <button type="submit" class="btn btn-dark">Create</button>
+                </form>
+            </fieldset>
+        </div>
+
+
+        <div class="col-md-8">
+            <table id="invitationList" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Identifier</th>
+                        <th>Link</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for invitation in invitations %}
+                <tr>
+                    <td>{{ invitation.getIdentifier() }}</td>
+                    <td>
+                        <a href="{{ backendUrl }}{{ path('register', {'invitationHash': invitation.getHash()}) }}" target="_blank">
+                            {{ backendUrl }}{{ path('register', {'invitationHash': invitation.getHash()}) }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('invitation-removal', {'invitationId': invitation.getId()}) }}">remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
