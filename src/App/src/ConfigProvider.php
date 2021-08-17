@@ -51,6 +51,7 @@ class ConfigProvider
                 Handler\InvitationRemovalHandler::class => Handler\InvitationRemovalHandlerFactory::class,
                 Handler\LoginHandler::class => Handler\LoginHandlerFactory::class,
                 Handler\LogoutHandler::class => Handler\LogoutHandlerFactory::class,
+                Handler\RegistrationHandler::class => Handler\RegistrationHandlerFactory::class,
                 Handler\SaveHandler::class => Handler\SaveHandlerFactory::class,
                 Handler\SettingsHandler::class => Handler\SettingsHandlerFactory::class,
                 Handler\UploadHandler::class => Handler\UploadHandlerFactory::class,
