@@ -48,6 +48,7 @@ class ConfigProvider
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
                 Handler\InvitationManagementHandler::class => Handler\InvitationManagementHandlerFactory::class,
+                Handler\InvitationRemovalHandler::class => Handler\InvitationRemovalHandlerFactory::class,
                 Handler\LoginHandler::class => Handler\LoginHandlerFactory::class,
                 Handler\LogoutHandler::class => Handler\LogoutHandlerFactory::class,
                 Handler\SaveHandler::class => Handler\SaveHandlerFactory::class,
