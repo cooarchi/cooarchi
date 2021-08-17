@@ -37,11 +37,14 @@ use Psr\Container\ContainerInterface;
  */
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
+    // Ping
     $app->get(
         Handler\PingHandler::ROUTE,
         Handler\PingHandler::class,
         Handler\PingHandler::ROUTE_NAME
     );
+
+    // Home
     $app->get(
         Handler\HomeHandler::ROUTE,
         [
@@ -50,6 +53,44 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         ],
         Handler\HomeHandler::ROUTE_NAME
     );
+
+    // Invitation Management
+    $app->route(
+        Handler\InvitationManagementHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Handler\InvitationManagementHandler::class,
+        ],
+        ['GET', 'POST'],
+        Handler\InvitationManagementHandler::ROUTE_NAME
+    );
+    // Invitation Removal
+    $app->get(
+        Handler\InvitationRemovalHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Handler\InvitationRemovalHandler::class,
+        ],
+        Handler\InvitationRemovalHandler::ROUTE_NAME
+    );
+
+    // Registration
+    $app->route(
+        Handler\RegistrationHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Handler\RegistrationHandler::class,
+        ],
+        ['GET', 'POST'],
+        Handler\RegistrationHandler::ROUTE_NAME
+    );
+
+    // Login & Logout
     $app->route(
         Handler\LoginHandler::ROUTE,
         [
@@ -65,6 +106,8 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         ],
         Handler\LogoutHandler::ROUTE_NAME
     );
+
+    // API Data endpoint
     $app->get(
         Handler\GetDataHandler::ROUTE,
         [
@@ -74,6 +117,8 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         ],
         Handler\GetDataHandler::ROUTE_NAME
     );
+
+    // API Save Endpoint
     $app->post(
         Handler\SaveHandler::ROUTE,
         [
@@ -84,6 +129,8 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         ],
         Handler\SaveHandler::ROUTE_NAME
     );
+
+    // API Upload Endpoint
     $app->post(
         Handler\UploadHandler::ROUTE,
         [
@@ -93,11 +140,15 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         ],
         Handler\UploadHandler::ROUTE_NAME
     );
+
+    // API Settings Endpoint
     $app->get(
         Handler\SettingsHandler::ROUTE,
         Handler\SettingsHandler::class,
         Handler\SettingsHandler::ROUTE_NAME
     );
+
+    // API Auth Status Endpoint
     $app->get(
         Handler\AuthStatusHandler::ROUTE,
         [
