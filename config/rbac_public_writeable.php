@@ -14,7 +14,9 @@ return [
         CooarchiEntities\User::ROLE_TRAVELLA => [],
         CooarchiEntities\User::ROLE_KOLLEKTIVISTA => [],
         CooarchiEntities\User::ROLE_ADMINISTRATA => [
-            Handler\PingHandler::ROUTE,
+            Handler\InvitationManagementHandler::ROUTE_NAME,
+            Handler\InvitationRemovalHandler::ROUTE_NAME,
+            Handler\PingHandler::ROUTE_NAME,
         ],
     ],
 ];

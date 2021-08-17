@@ -13,11 +13,13 @@ return [
     'permissions' => [
         CooarchiEntities\User::ROLE_TRAVELLA => [],
         CooarchiEntities\User::ROLE_KOLLEKTIVISTA => [
-            Handler\SaveHandler::ROUTE,
-            Handler\UploadHandler::ROUTE,
+            Handler\SaveHandler::ROUTE_NAME,
+            Handler\UploadHandler::ROUTE_NAME,
         ],
         CooarchiEntities\User::ROLE_ADMINISTRATA => [
-            Handler\PingHandler::ROUTE,
+            Handler\InvitationManagementHandler::ROUTE_NAME,
+            Handler\InvitationRemovalHandler::ROUTE_NAME,
+            Handler\PingHandler::ROUTE_NAME,
         ],
     ],
 ];
