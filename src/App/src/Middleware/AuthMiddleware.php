@@ -6,6 +6,7 @@ namespace CooarchiApp\Middleware;
 
 use CooarchiApp\Handler\AuthStatusHandler;
 use CooarchiApp\Handler\HomeHandler;
+use CooarchiApp\Handler\RegistrationHandler;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,6 +43,7 @@ final class AuthMiddleware implements MiddlewareInterface
 
         if ($routeName !== HomeHandler::ROUTE_NAME &&
             $routeName !== AuthStatusHandler::ROUTE_NAME &&
+            $routeName !== RegistrationHandler::ROUTE_NAME &&
             $this->authenticationService->hasIdentity() === false
         ) {
             return new RedirectResponse($this->urlHelper->generate('login'));
