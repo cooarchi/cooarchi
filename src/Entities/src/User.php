@@ -55,6 +55,12 @@ class User
     private $role;
 
     /**
+     * @ORM\Column(name="invitation_hash", type="string", length=20, nullable=true)
+     * @var string
+     */
+    private $invitationHash;
+
+    /**
      * @ORM\Column(type="datetime")
      * @var DateTime
      */
@@ -63,13 +69,17 @@ class User
     public function __construct(
         string $name,
         string $password,
-        string $role = self::ROLE_TRAVELLA
+        string $role = self::ROLE_TRAVELLA,
+        ?string $invitationHash
     ) {
-        if ($name !== null && mb_strlen($name, ConfigProvider::ENCODING) > 240) {
+        if (mb_strlen($name, ConfigProvider::ENCODING) > 240) {
             throw new InvalidArgumentException('name text is too long (> 240 chars)');
         }
-        if ($password !== null && mb_strlen($name, ConfigProvider::ENCODING) > 128) {
+        if (mb_strlen($name, ConfigProvider::ENCODING) > 128) {
             throw new InvalidArgumentException('password text is too long (> 128 chars)');
+        }
+        if ($invitationHash !== null && mb_strlen($invitationHash, ConfigProvider::ENCODING) > 20) {
+            throw new InvalidArgumentException('invitationHash text is too long (> 20 chars)');
         }
         if ($role !== self::ROLE_ADMINISTRATA &&
             $role !== self::ROLE_KOLLEKTIVISTA &&
@@ -79,33 +89,39 @@ class User
         }
 
         $this->id = (string) Uuid::uuid4();
+        $this->invitationHash= $invitationHash;
         $this->name = $name;
         $this->password = $password;
         $this->role = $role;
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
     }
 
-    public function getId(): string
+    public function getId() : string
     {
         return $this->id;
     }
 
-    public function getPassword(): string
+    public function getInvitationHash() : ?string
+    {
+        return $this->invitationHash;
+    }
+
+    public function getPassword() : string
     {
         return $this->password;
     }
 
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    public function getRole(): string
+    public function getRole() : string
     {
         return $this->role;
     }
 
-    public function getCreated(): DateTime
+    public function getCreated() : DateTime
     {
         return $this->created;
     }
