@@ -38,12 +38,12 @@ return [
         'isPublicWriteable' => false,
 
         /**
-         * url for frontend
+         * url for frontend (without trailing slash)
          */
         'frontendUrl' => 'https://www.cooarchi.net',
 
         /**
-         * url for backend
+         * url for backend (without trailing slash)
          */
         'backendUrl' => 'https://api.cooarchi.net',
     ],
