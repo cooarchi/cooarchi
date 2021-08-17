@@ -88,3 +88,8 @@ a {
 .help-block {
     color: var(--main-fg-color);
 }
+
+.jumbotron {
+    background-color: transparent;
+    padding: 2rem 0;
+}
