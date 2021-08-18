@@ -11,7 +11,9 @@ return [
         CooarchiEntities\User::ROLE_TRAVELLA => [CooarchiEntities\User::ROLE_KOLLEKTIVISTA],
     ],
     'permissions' => [
-        CooarchiEntities\User::ROLE_TRAVELLA => [],
+        CooarchiEntities\User::ROLE_TRAVELLA => [
+            Handler\GetDataHandler::ROUTE_NAME,
+        ],
         CooarchiEntities\User::ROLE_KOLLEKTIVISTA => [
             Handler\SaveHandler::ROUTE_NAME,
             Handler\UploadHandler::ROUTE_NAME,
