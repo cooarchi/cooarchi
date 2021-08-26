@@ -70,7 +70,7 @@ class User
         string $name,
         string $password,
         string $role = self::ROLE_TRAVELLA,
-        ?string $invitationHash
+        ?string $invitationHash = null
     ) {
         if (mb_strlen($name, ConfigProvider::ENCODING) > 240) {
             throw new InvalidArgumentException('name text is too long (> 240 chars)');
