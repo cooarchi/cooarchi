@@ -26,6 +26,21 @@ return [
      */
     'cooarchi' => [
         /**
+         * cooArchi name (will be part of window title and will be displayed on website, too)
+         */
+        'name' => '<the name you want for your cooArchi>',
+
+        /**
+         * background picture - put file into "public" folder to be public reachable
+         */
+        'backgroundPicture' => '<public viewable file path to your image>',
+
+        /**
+         * allow usage of core elements inside visualisation and administration
+         */
+        'allowCoreElements' => true,
+
+        /**
          * cooArchi is public and can be entered by everyone if set to `true`
          * cooArchi is not public and can only be entered by kollektivistA if set to `false`
          */
@@ -36,6 +51,11 @@ return [
          * new content can only be added by kollektivistA if set to `false`
          */
         'isPublicWriteable' => false,
+
+        /**
+         * background picture - put file into "public" folder to be public reachable
+         */
+        'kollektivistaCanAddRelations' => true,
 
         /**
          * url for frontend (without trailing slash)
