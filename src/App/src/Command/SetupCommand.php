@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CooarchiApp\Command;
 
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,8 +45,6 @@ class SetupCommand extends Command
 
     public function run(InputInterface $input, OutputInterface $output) : int
     {
-        //$input->setInteractive(true);
-
         $welcomeMessage = 'Hi, great you found me! Will try to help you now to get your cooArchi up and running.';
         $output->writeln(sprintf('<comment>%s</comment>', $welcomeMessage));
 
@@ -131,7 +130,7 @@ class SetupCommand extends Command
             $output->writeln(
                 sprintf('<comment>Please verify your settings inside file: %s</comment>', $configFilePath)
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $output->writeln(sprintf('<error>An error occurred: %s</error>', $exception->getMessage()));
             return Command::FAILURE;
         }
