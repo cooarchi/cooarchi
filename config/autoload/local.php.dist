@@ -31,11 +31,6 @@ return [
         'name' => '<the name you want for your cooArchi>',
 
         /**
-         * background picture - put file into "public" folder to be public reachable
-         */
-        'backgroundPicture' => '<public viewable file path to your image>',
-
-        /**
          * allow usage of core elements inside visualisation and administration
          */
         'allowCoreElements' => true,
