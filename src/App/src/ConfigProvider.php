@@ -45,6 +45,7 @@ class ConfigProvider
             'factories'  => [
                 AuthenticationService::class => Authentication\AuthenticationServiceFactory::class,
                 Authentication\Adapter::class => Authentication\AdapterFactory::class,
+                Command\SetupCommand::class => Command\SetupCommandFactory::class,
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
                 Handler\InvitationManagementHandler::class => Handler\InvitationManagementHandlerFactory::class,
