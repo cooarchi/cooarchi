@@ -37,6 +37,6 @@ class AuthStatusHandler implements RequestHandlerInterface
             return new JsonResponse($user, StatusCode\All::OK);
         }
 
-        return new JsonResponse(false, StatusCode\All::NOT_FOUND);
+        return new JsonResponse("not_logged_in", StatusCode\All::NOT_FOUND);
     }
 }
