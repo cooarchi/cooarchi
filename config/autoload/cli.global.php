@@ -8,6 +8,7 @@ return [
     'laminas-cli' => [
         'commands' => [
             'cooArchi:setup' => Command\SetupCommand::class,
+            'cooArchi:create-administrata' => Command\CreateAdministrataCommand::class,
         ],
     ],
 ];
