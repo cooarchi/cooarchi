@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * cooArchi App configuration.
+ *
+ * Copy this file to `local.php` and change its settings as required.
+ * `local.php` is ignored by git and safe to use for local and sensitive data like usernames and passwords.
+ */
+
+declare(strict_types=1);
+
+return [
+    /**
+     * DB Configuration
+     */
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'params' => ['url' => 'mysql://{{dbUser}}:{{dbPassword}}@{{dbHost}}/{{dbName}}'],
+            ],
+        ],
+    ],
+
+    /**
+     * cooArchi App Settings
+     */
+    'cooarchi' => [
+        /**
+         * cooArchi name (will be part of window title and will be displayed on website, too)
+         */
+        'name' => '{{cooArchiName}}',
+
+        /**
+         * allow usage of core elements inside visualisation and administration
+         */
+        'allowCoreElements' => {{allowCoreElements}},
+
+        /**
+         * cooArchi is public and can be entered by everyone if set to `true`
+         * cooArchi is not public and can only be entered by kollektivistA if set to `false`
+         */
+        'isPublicReadable' => {{isPublicReadable}},
+
+        /**
+         * new content can be added by everyone if set to `true`
+         * new content can only be added by kollektivistA if set to `false`
+         */
+        'isPublicWriteable' => {{isPublicWriteable}},
+
+        /**
+         * background picture - put file into "public" folder to be public reachable
+         */
+        'kollektivistaCanAddRelations' => {{kollektivistaCanAddRelations}},
+
+        /**
+         * url for frontend (without trailing slash)
+         */
+        'frontendUrl' => '{{frontendUrl}}',
+
+        /**
+         * url for backend (without trailing slash)
+         */
+        'backendUrl' => '{{backendUrl}}',
+    ],
+];
