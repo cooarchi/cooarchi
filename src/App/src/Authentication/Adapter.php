@@ -11,7 +11,7 @@ use Laminas\Crypt\Password\Bcrypt;
 
 class Adapter implements AdapterInterface
 {
-    private const PASSWORD_COST = 14;
+    public const PASSWORD_COST = 14;
 
     /**
      * @var string
