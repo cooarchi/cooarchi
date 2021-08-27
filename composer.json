@@ -34,6 +34,7 @@
         "ext-json": "^7.4",
         "composer/package-versions-deprecated": "^1.10.99",
         "laminas/laminas-authentication": "^2.8",
+        "laminas/laminas-cli": "^1.1",
         "laminas/laminas-component-installer": "^2.1.2",
         "laminas/laminas-config-aggregator": "^1.2",
         "laminas/laminas-crypt": "^3.4",
