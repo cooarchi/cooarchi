@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace CooarchiApp\Middleware;
 
-use CooarchiApp\Authentication;
 use CooarchiApp\Handler\AuthStatusHandler;
 use CooarchiApp\Handler\HomeHandler;
 use CooarchiApp\Handler\RegistrationHandler;
 use CooarchiEntities\User;
-use Laminas\Crypt\Password\Bcrypt;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
