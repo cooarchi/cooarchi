@@ -25,7 +25,7 @@ body
     -webkit-box-sizing: border-box; /* Safari, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
-    width: 100%;
+    /*width: 100%;
 
     margin: 0 -3px 0 0;
     overflow-x: hidden;
@@ -41,13 +41,8 @@ body
     user-drag: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
-    overflow: hidden;
+    overflow: hidden;*/
     background-color: var(--canvas-background);
-    user-select: none; /* supported by Chrome and Opera */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 a {
@@ -68,18 +63,104 @@ a {
     }
 }
 
+/*   The main buttons in the corner */
+.main_button {
+    text-align: center;
+    padding: 10px;
+}
+.main_button:hover{}
+.img_logo {
+    position: absolute;
+    fill: var(--sec-bg-color);
+}
+.logo_text {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.logo_text a {
+    text-decoration: none;
+    color: var(--sec-fg-color);
+}
 
-.app .start {
-    margin-top: 15rem;
+#help {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    font-size: 36px;
+    width: 65px;
+    height: 65px;
+}
+
+#account {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 20px;
+    width: 70px;
+    height: 65px;
+}
+#account .logo_text {
+    position: absolute;
+    top: 0;
+    left: 20px;
+}
+
+.app .notification {
+    margin-bottom: -2rem;
+    margin-top: 1rem;
     text-align: center;
 }
+
+.app .start {
+    margin-top: 7rem;
+    text-align: center;
+}
+
 .app .start h2 {
     font-size: 1.5rem;
     margin: 1rem 0 2rem;
 }
 
+.app .start h3.name {
+    border: var(--sec-fg-color) 1px solid;
+    display: inline-block;
+    font-size: 1.5rem;
+    margin: -3rem 0 4rem;
+    padding: 10px;
+    width: auto;
+}
+
+.app .start p.welcome {
+    font-style: italic;
+    margin: 3rem 10rem -1rem;
+}
+
+.app .start p.identity {
+    margin: 3rem 0 -1rem;
+}
+
 .app .start p.links {
-    margin-top: 2rem;
+    margin-top: 3rem;
+}
+
+.app .app-footer {
+    padding-bottom: 1rem;
+}
+.app .app-footer .admin_nav {
+    border-top: 2px solid var(--sec-bg-color);
+    margin-top: 3rem;
+    padding-top: 1rem;
+}
+.app .app-footer .admin_nav ul {
+    display: inline;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 0 1rem;
+}
+.app .app-footer .admin_nav ul li {
+    display: inline;
+    margin-right: 1rem;
 }
 
 #login {
