@@ -1,0 +1,17 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Help | {% endblock %}
+
+{% block content %}
+
+    <div class="row start">
+        <div class="col-md-12">
+            {% if cooArchiName is defined and cooArchiName is not empty %}
+                <h3 class="name">{{ cooArchiName|escape }}</h3>
+            {% endif %}
+
+            <h1>Help</h1>
+        </div>
+    </div>
+
+{% endblock %}

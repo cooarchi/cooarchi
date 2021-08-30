@@ -1,0 +1,57 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Content Management | {% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>Content Management</h1>
+            </div>
+            {% if error is defined and errorInput is not defined %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}
+            {% if success is defined %}
+                <div class="alert alert-success" role="alert">{{ success }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="elementList" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>PubID</th>
+                        <th>Name</th>
+                        <th>TW</th>
+                        <th>Created</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for element in elements %}
+                <tr>
+                    <td>{{ element.getPubId()|escape }}</td>
+                    <td>
+                    {% if element.isFile() %}
+                        File: {{ element.filePath()|escape }}
+                    {% elseif element.isLongText() %}
+                        {{ element.isLongText()|escape }}
+                    {% else %}
+                        {{ element.getLabel()|escape }}
+                    {% endif %}
+                    </td>
+                    <td>{{ element.hasTriggerWarning }}</td>
+                    <td>{{ element.getCreated()|date('Y-m-d H:i:s') }}</td>
+                    <td>
+                        <a href="{{ path('content-removal', {'elementId': element.getPubId()}) }}">remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

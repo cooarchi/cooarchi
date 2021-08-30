@@ -1,0 +1,49 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Users | {% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>Users</h1>
+            </div>
+            {% if error is defined and errorInput is not defined %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}
+            {% if success is defined %}
+                <div class="alert alert-success" role="alert">{{ success }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="userList" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.getId()|escape }}</td>
+                    <td>{{ user.getName()|escape }}</td>
+                    <td>{{ user.getRole()|escape }}</td>
+                    <td>{{ user.getCreated()|date('Y-m-d H:i:s') }}</td>
+                    <td>
+                        <a href="{{ path('user-removal', {'userId': user.getId()}) }}">remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
