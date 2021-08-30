@@ -11,7 +11,6 @@ use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use function filter_var;
-use function in_array;
 use function mb_strlen;
 use function trim;
 
@@ -61,6 +60,18 @@ class File
     private $size;
 
     /**
+     * @ORM\Column(name="extension", type="string", length=20, nullable=false)
+     * @var string
+     */
+    private $extension;
+
+    /**
+     * @ORM\Column(name="user", type="guid", nullable=true)
+     * @var bool
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="datetime")
      * @var DateTime
      */
@@ -70,27 +81,43 @@ class File
         UuidInterface $fileId,
         string $mimeType,
         int $size,
-        ?string $label
+        string $extension,
+        ?string $label,
+        ?string $userId
     ) {
+        if (mb_strlen($extension, ConfigProvider::ENCODING) > 20) {
+            throw new InvalidArgumentException('Extension Text is too long (> 20 chars)');
+        }
         if ($label !== null && mb_strlen($label, ConfigProvider::ENCODING) > 255) {
             throw new InvalidArgumentException('Label Text is too long (> 255 chars)');
         }
         if ($label !== null) {
             $label = trim((string) filter_var($label, FILTER_SANITIZE_STRING));
         }
+        if ($userId !== null && Uuid::isValid($userId) === false) {
+            $userId = null;
+        }
 
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
+        $this->extension = $extension;
         $this->id = $fileId->toString();
         $this->label = $label;
-        $this->mimeType = trim((string) filter_var($mimeType, FILTER_SANITIZE_STRING));;
+        $this->mimeType = trim((string) filter_var($mimeType, FILTER_SANITIZE_STRING));
         $this->pubId = (string) Uuid::uuid4();
         $this->size = $size;
+        $this->user = $userId;
     }
 
     public function getCreated() : DateTime
     {
         return $this->created;
     }
+
+    public function getExtension() : string
+    {
+        return $this->extension;
+    }
+
     public function getId() : UuidInterface
     {
         return $this->id;
@@ -114,5 +141,10 @@ class File
     public function getSize() : int
     {
         return $this->size;
+    }
+
+    public function getUser() : ?string
+    {
+        return $this->user;
     }
 }
