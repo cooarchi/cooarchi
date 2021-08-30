@@ -1,6 +1,39 @@
-# Cooarchi Test
+# cooArchi
 
-A community oriented archive interface.
+a community oriented archive interface.
+
+cooArchi is like a conversation,you can tell stories, relate to what others said and share your perspective. You can browse, find stories and get lost. It is an archive that we are building together. PART OF IT YOU ARE.
+
+## Setup/Installation guide
+
+see documentation [here](https://cooarchi.github.io/documentation/)
+
+## Frontend related Routes
+
+- `/` - start website
+- `/help` - shows help page
+- `/login` and `/logout` - login/logout
+- `/register/:hash:` - register a new kollektivistA Account with provided invitation link
+
+## Admin Routes
+
+- `/users` - manage registrated user
+- `/invitations` - manage invitations
+- `/content-management` - remove content (element, element relations)
+- `/file-management` - remove files
+
+## API Endpoints
+
+- GET `/authstatus` - returns 404 or 202 status code with logged in user objec
+- GET `/data` and `/data?delta=1` - returns list of elements and element relations
+- POST `/save` - save elements and relations
+- POST `/upload` - save file on server and create DB file entry
+- GET `/settings` - returns existing cooArchi config
+
+## CLI tools
+
+- `vendor/bin/laminas`
+- `vendor/bin/doctrine`
 
 ## Getting Started
 
@@ -10,8 +43,35 @@ Start your new Cooarchi project by cloning git repo to a local folder
 $ git clone <url> <folder>
 ```
 
-After choosing go to the
-`<folder>` and start PHP's built-in web server to verify installation:
+Clone `https://github.com/cooarchi/cooarchi-ui` into `public/ui` folder after that.
+
+Run following commands then:
+
+```bash
+$ vendor/bin/laminas cooArchi:setup
+```
+
+```bash
+$ vendor/bin/laminas cooArchi:create-administrata
+```
+
+```bash
+$ vendor/bin/doctrine orm:generate-proxies
+```
+
+```bash
+$ vendor/bin/doctrine orm:schema-tool:update --dump-sql
+```
+
+```bash
+$ chmod 777 public/files
+```
+
+Copy SQL queries and execute them inside your DB setup.
+
+Yuo should be able to run the app now.
+
+Use PHP internal server or something like Nginx or Caddy (preferred for local SSL support).
 
 ```bash
 $ php -S 0.0.0.0:8080 -t public/ public/index.php
