@@ -12,7 +12,7 @@ cooArchi is like a conversation,you can tell stories, relate to what others said
 
 ## Setup/Installation guide
 
-see documentation [here](https://cooarchi.github.io/documentation/)
+see documentation [here](https://cooarchi.github.io/documentation/installation-and-setup/)
 
 ## Frontend related Routes
 
@@ -132,5 +132,3 @@ $ composer clear-config-cache
 You may also change the location of the configuration cache itself by editing
 the `config/config.php` file and changing the `config_cache_path` entry of the
 local `$cacheConfig` variable.
-
-just an editing testi test
