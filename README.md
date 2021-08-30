@@ -4,6 +4,12 @@ a community oriented archive interface.
 
 cooArchi is like a conversation,you can tell stories, relate to what others said and share your perspective. You can browse, find stories and get lost. It is an archive that we are building together. PART OF IT YOU ARE.
 
+## Requirements
+
+- Web Server of your choice: Nginx, Apache, Caddy
+- PHP 7.4
+- MySQL Database
+
 ## Setup/Installation guide
 
 see documentation [here](https://cooarchi.github.io/documentation/)
@@ -45,7 +51,13 @@ $ git clone <url> <folder>
 
 Clone `https://github.com/cooarchi/cooarchi-ui` into `public/ui` folder after that.
 
+Install [composer](https://getcomposer.org) global or download phar inside project folder.
+
 Run following commands then:
+
+```bash
+$ php composer.phar install
+```
 
 ```bash
 $ vendor/bin/laminas cooArchi:setup
@@ -69,7 +81,7 @@ $ chmod 777 public/files
 
 Copy SQL queries and execute them inside your DB setup.
 
-Yuo should be able to run the app now.
+You should be able to run the app now.
 
 Use PHP internal server or something like Nginx or Caddy (preferred for local SSL support).
 
