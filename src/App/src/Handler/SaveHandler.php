@@ -82,6 +82,9 @@ class SaveHandler implements RequestHandlerInterface
             return new JsonResponse(['error' => 'Invalid request method'], 500);
         }
 
+        /** @var CooarchiEntities\User $user */
+        $user = $request->getAttribute('identity', false);
+
         try {
             $bodyAttributes = $request->getParsedBody();
 
@@ -129,7 +132,7 @@ class SaveHandler implements RequestHandlerInterface
             // Element From only case
             if ($targetKey === null || $targetKey === '') {
                 if ($elementFrom === null) {
-                    $elementFrom = $this->createElement($elementFromValues);
+                    $elementFrom = $this->createElement($elementFromValues, $user);
                     $this->entityManager->persist($elementFrom);
                     $this->entityManager->flush();
                 }
@@ -159,7 +162,11 @@ class SaveHandler implements RequestHandlerInterface
                 $newElementCheck = true;
             }
             if ($relationLabel === null) {
-                $relationLabel = new CooarchiEntities\RelationLabel($this->uuidFactory->uuid1(), $relationDescription);
+                $relationLabel = new CooarchiEntities\RelationLabel(
+                    $this->uuidFactory->uuid1(),
+                    $relationDescription,
+                    $user->getId()
+                );
                 $this->entityManager->persist($relationLabel);
                 $newElementCheck = true;
             }
@@ -183,7 +190,8 @@ class SaveHandler implements RequestHandlerInterface
             $elementRelation = new CooarchiEntities\ElementRelation(
                 $elementFrom,
                 $elementTo,
-                $relationLabel
+                $relationLabel,
+                $user->getId()
             );
             $this->entityManager->persist($elementRelation);
 
@@ -198,7 +206,10 @@ class SaveHandler implements RequestHandlerInterface
         );
     }
 
-    private function createElement(ValueObject\Element $elementValues) : CooarchiEntities\Element
+    private function createElement(
+        ValueObject\Element $elementValues,
+        CooarchiEntities\User $user
+    ) : CooarchiEntities\Element
     {
         $isFile = false;
         if ($elementValues->getUrl() !== null) {
@@ -215,7 +226,8 @@ class SaveHandler implements RequestHandlerInterface
             $elementValues->getLabel(),
             $elementValues->getLongText(),
             $elementValues->getUrl(),
-            $elementValues->getMediaType()
+            $elementValues->getMediaType(),
+            $user->getId()
         );
     }
 

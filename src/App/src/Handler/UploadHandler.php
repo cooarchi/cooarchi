@@ -56,6 +56,9 @@ class UploadHandler implements RequestHandlerInterface
             return new JsonResponse(['error' => 'Invalid request method'], 500);
         }
 
+        /** @var CooarchiEntities\User $user */
+        $user = $request->getAttribute('identity', false);
+
         try {
             $files = $request->getUploadedFiles();
             if (isset($files['file']) === false) {
@@ -67,18 +70,20 @@ class UploadHandler implements RequestHandlerInterface
 
             $mimeType = $uploadedFile->getClientMediaType();
             $label = null; // @todo not implemented in frontend right now
+            $extension = $this->getFileExtension($mimeType);
 
             $file = new CooarchiEntities\File(
                 $this->uuidFactory->uuid1(),
                 $mimeType,
                 (int) $uploadedFile->getSize(),
-                $label
+                $extension,
+                $label,
+                $user->getId()
             );
 
             $this->entityManager->persist($file);
             $this->entityManager->flush();
 
-            $extension = $this->getFileExtension($file->getMimeType());
             $fileName = sprintf(
                 '%s.%s',
                 $file->getPubId(),
