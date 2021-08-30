@@ -49,9 +49,21 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         Handler\HomeHandler::ROUTE,
         [
             Middleware\AuthMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
             Handler\HomeHandler::class,
         ],
         Handler\HomeHandler::ROUTE_NAME
+    );
+
+    // Help
+    $app->get(
+        Handler\HelpHandler::ROUTE,
+        [
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\HelpHandler::class,
+        ],
+        Handler\HelpHandler::ROUTE_NAME
     );
 
     // Invitation Management
@@ -61,6 +73,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
             Middleware\AuthMiddleware::class,
             Middleware\PermissionMiddleware::class,
             Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
             Handler\InvitationManagementHandler::class,
         ],
         ['GET', 'POST'],
@@ -73,9 +86,88 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
             Middleware\AuthMiddleware::class,
             Middleware\PermissionMiddleware::class,
             Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
             Handler\InvitationRemovalHandler::class,
         ],
         Handler\InvitationRemovalHandler::ROUTE_NAME
+    );
+
+    // User Management
+    $app->route(
+        Handler\UserManagementHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\UserManagementHandler::class,
+        ],
+        ['GET', 'POST'],
+        Handler\UserManagementHandler::ROUTE_NAME
+    );
+    // User Removal
+    $app->get(
+        Handler\UserRemovalHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\UserRemovalHandler::class,
+        ],
+        Handler\UserRemovalHandler::ROUTE_NAME
+    );
+
+    // Content Management
+    $app->route(
+        Handler\ContentManagementHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\ContentManagementHandler::class,
+        ],
+        ['GET', 'POST'],
+        Handler\ContentManagementHandler::ROUTE_NAME
+    );
+    // Content Removal
+    $app->get(
+        Handler\ContentRemovalHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\ContentRemovalHandler::class,
+        ],
+        Handler\ContentRemovalHandler::ROUTE_NAME
+    );
+
+    // File Management
+    $app->route(
+        Handler\FileManagementHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\FileManagementHandler::class,
+        ],
+        ['GET', 'POST'],
+        Handler\FileManagementHandler::ROUTE_NAME
+    );
+    // File Removal
+    $app->get(
+        Handler\FileRemovalHandler::ROUTE,
+        [
+            Middleware\AuthMiddleware::class,
+            Middleware\PermissionMiddleware::class,
+            Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
+            Handler\FileRemovalHandler::class,
+        ],
+        Handler\FileRemovalHandler::ROUTE_NAME
     );
 
     // Registration
@@ -84,6 +176,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         [
             Middleware\AuthMiddleware::class,
             Middleware\SlimFlashMiddleware::class,
+            Middleware\TemplateVariablesMiddleware::class,
             Handler\RegistrationHandler::class,
         ],
         ['GET', 'POST'],
@@ -94,6 +187,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route(
         Handler\LoginHandler::ROUTE,
         [
+            Middleware\TemplateVariablesMiddleware::class,
             Handler\LoginHandler::class,
         ],
         ['GET', 'POST'],
@@ -102,6 +196,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get(
         Handler\LogoutHandler::ROUTE,
         [
+            Middleware\TemplateVariablesMiddleware::class,
             Handler\LogoutHandler::class,
         ],
         Handler\LogoutHandler::ROUTE_NAME

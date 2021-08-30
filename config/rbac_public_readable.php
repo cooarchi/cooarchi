@@ -19,9 +19,15 @@ return [
             Handler\UploadHandler::ROUTE_NAME,
         ],
         CooarchiEntities\User::ROLE_ADMINISTRATA => [
+            Handler\ContentManagementHandler::ROUTE_NAME,
+            Handler\ContentRemovalHandler::ROUTE_NAME,
+            Handler\FileManagementHandler::ROUTE_NAME,
+            Handler\FileRemovalHandler::ROUTE_NAME,
             Handler\InvitationManagementHandler::ROUTE_NAME,
             Handler\InvitationRemovalHandler::ROUTE_NAME,
             Handler\PingHandler::ROUTE_NAME,
+            Handler\UserManagementHandler::ROUTE_NAME,
+            Handler\UserRemovalHandler::ROUTE_NAME,
         ],
     ],
 ];
