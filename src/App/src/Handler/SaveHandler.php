@@ -148,7 +148,7 @@ class SaveHandler implements RequestHandlerInterface
             $newElementCheck = false;
 
             if ($elementFrom === null) {
-                $elementFrom = $this->createElement($elementFromValues);
+                $elementFrom = $this->createElement($elementFromValues, $user);
                 $this->entityManager->persist($elementFrom);
                 $newElementCheck = true;
             }
@@ -157,7 +157,7 @@ class SaveHandler implements RequestHandlerInterface
             ) {
                 $elementTo = $elementFrom;
             } elseif ($elementTo === null) {
-                $elementTo = $this->createElement($elementToValues);
+                $elementTo = $this->createElement($elementToValues, $user);
                 $this->entityManager->persist($elementTo);
                 $newElementCheck = true;
             }
