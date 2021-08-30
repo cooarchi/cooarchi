@@ -72,6 +72,15 @@ class SetupCommand extends Command
             $question = new Question\Question('<comment>Provide name for cooArchi: </comment>');
             $cooArchiName = $questionHelper->ask($input, $output, $question);
 
+            $welcomeTextDefault = 'cooArchi is like a conversation,you can tell stories, relate to what others said ';
+            $welcomeTextDefault .= 'and share your perspective. You can browse, find stories and get lost. ';
+            $welcomeTextDefault .= 'It is an archive that we are building together. PART OF IT YOU ARE.';
+            $question = new Question\Question(
+                '<comment>Provide welcomeText for cooArchi (leave empty for default): </comment>',
+                $welcomeTextDefault
+            );
+            $welcomeText = $questionHelper->ask($input, $output, $question);
+
             $question = new Question\ChoiceQuestion(
                 '<comment>cooArchi will allow core elements: </comment>',
                 [self::NO, self::YES]
@@ -116,6 +125,7 @@ class SetupCommand extends Command
             $configTemplate = str_replace('{{dbUser}}', $dbUser, $configTemplate);
             $configTemplate = str_replace('{{dbPassword}}', $dbPassword, $configTemplate);
             $configTemplate = str_replace('{{cooArchiName}}', $cooArchiName, $configTemplate);
+            $configTemplate = str_replace('{{welcomeText}}', $welcomeText, $configTemplate);
             $configTemplate = str_replace('{{allowCoreElements}}', $allowCoreElements, $configTemplate);
             $configTemplate = str_replace('{{kollektivistaCanAddRelations}}', $kollektivistaCanAddRelations, $configTemplate);
             $configTemplate = str_replace('{{isPublicReadable}}', $isPublicReadable, $configTemplate);
