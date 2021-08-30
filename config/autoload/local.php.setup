@@ -31,6 +31,11 @@ return [
         'name' => '{{cooArchiName}}',
 
         /**
+         * cooArchi welcome text on start page
+         */
+        'welcomeText' => '{{welcomeText}}',
+
+        /**
          * allow usage of core elements inside visualisation and administration
          */
         'allowCoreElements' => {{allowCoreElements}},

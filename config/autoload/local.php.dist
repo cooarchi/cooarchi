@@ -31,6 +31,13 @@ return [
         'name' => '<the name you want for your cooArchi>',
 
         /**
+         * cooArchi welcome text on start page
+         */
+        'welcomeText' => 'cooArchi is like a conversation,you can tell stories, relate
+            to what others said and share your perspective. You can browse, find stories and get lost.
+            It is an archive that we are building together. PART OF IT YOU ARE.',
+
+        /**
          * allow usage of core elements inside visualisation and administration
          */
         'allowCoreElements' => true,
