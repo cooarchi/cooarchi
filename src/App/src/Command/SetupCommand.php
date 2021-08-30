@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question;
 use function file_get_contents;
 use function file_put_contents;
+use function is_file;
 use function sprintf;
 use function str_replace;
 
@@ -135,6 +136,15 @@ class SetupCommand extends Command
 
             $configFilePath = sprintf('%s/config/autoload/local.php', $this->basePath);
             file_put_contents($configFilePath, $configTemplate);
+
+
+            $frontendConfigTemplateFilePath = sprintf('%s/public/ui/config/config.json.dist', $this->basePath);
+            if (is_file($frontendConfigTemplateFilePath) === true) {
+                $frontendConfigTemplate = file_get_contents($frontendConfigTemplateFilePath);
+                $frontendConfigTemplate = str_replace('{{backendUrl}}', $backendUrl, $frontendConfigTemplate);
+                $frontendConfigFilePath = sprintf('%s/public/ui/config/config.json', $this->basePath);
+                file_put_contents($frontendConfigFilePath, $frontendConfigTemplate);
+            }
 
             $output->writeln('<info>Finished creation of app config!</info>');
             $output->writeln(
