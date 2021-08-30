@@ -17,6 +17,7 @@ class RegistrationHandlerFactory
         return new RegistrationHandler(
             $entityManager,
             new CooarchiQueries\FindInvitation($entityManager),
+            new CooarchiQueries\FindUser($entityManager),
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class)
         );
