@@ -51,21 +51,31 @@ class RelationLabel
     private $description;
 
     /**
+     * @ORM\Column(name="user", type="guid", nullable=true)
+     * @var bool
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="datetime")
      * @var DateTime
      */
     private $created;
 
-    public function __construct(UuidInterface $relationLabelId, string $description)
+    public function __construct(UuidInterface $relationLabelId, string $description, ?string $userId)
     {
         if (mb_strlen($description, ConfigProvider::ENCODING) > 255) {
             throw new InvalidArgumentException('Description is too long (> 255 chars)');
+        }
+        if ($userId !== null && Uuid::isValid($userId) === false) {
+            $userId = null;
         }
 
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
         $this->id = $relationLabelId->toString();
         $this->description = trim((string) filter_var($description, FILTER_SANITIZE_STRING));
         $this->pubId = (string) Uuid::uuid4();
+        $this->user = $userId;
     }
 
     public function getCreated() : DateTime
@@ -86,5 +96,10 @@ class RelationLabel
     public function getPubId() : string
     {
         return $this->pubId;
+    }
+
+    public function getUser() : ?string
+    {
+        return $this->user;
     }
 }

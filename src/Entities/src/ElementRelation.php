@@ -6,6 +6,7 @@ namespace CooarchiEntities;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * ElementRelation Entity
@@ -47,17 +48,32 @@ class ElementRelation
     private $relationLabel;
 
     /**
+     * @ORM\Column(name="user", type="guid", nullable=true)
+     * @var bool
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="datetime")
      * @var DateTime
      */
     private $created;
 
-    public function __construct(Element $elementFrom, Element $elementTo, RelationLabel $relationLabel)
-    {
+    public function __construct(
+        Element $elementFrom,
+        Element $elementTo,
+        RelationLabel $relationLabel,
+        ?string $userId
+    ) {
+        if ($userId !== null && Uuid::isValid($userId) === false) {
+            $userId = null;
+        }
+
         $this->created = new DateTime('now', new DateTimeZone('UTC'));
         $this->elementFrom = $elementFrom;
         $this->elementTo = $elementTo;
         $this->relationLabel = $relationLabel;
+        $this->user = $userId;
     }
 
     public function getCreated() : DateTime
@@ -78,5 +94,10 @@ class ElementRelation
     public function getRelationLabel() : RelationLabel
     {
         return $this->relationLabel;
+    }
+
+    public function getUser() : ?string
+    {
+        return $this->user;
     }
 }
