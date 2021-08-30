@@ -1,25 +1,44 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block title %}cooArchi{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
 
+    {% if error is defined or success is defined %}
+    <div class="row notification">
+        <div class="col-md-12">
+            {% if error is defined and errorInput is not defined %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}{% if success is defined %}
+                <div class="alert alert-success" role="alert">{{ success }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="row start">
         <div class="col-md-12">
+            {% if cooArchiName is defined and cooArchiName is not empty %}
+                <h3 class="name">{{ cooArchiName|escape }}</h3>
+            {% endif %}
+
             <div class="cooarchi">
                 <h1>cooArchi</h1>
                 <h2>community oriented archiving interface</h2>
             </div>
-            <p>
-                wir schreibt Geschichte
+
+            {% if welcomeText is defined and welcomeText is not empty %}
+                <p class="welcome">{{ welcomeText|escape }}</p>
+            {% endif %}
+
+            {% if identity is not empty %}
+            <p class="identity">
+                Welcome back {{ identity.getName()|escape }}!
             </p>
+            {% endif %}
+
             <p class="links">
-                <a href="/visualisation/index.html">enter</a> |
-                {% if identity is not empty %}
-                    <a href="{{ path('logout') }}">logout</a>
-                {% else %}
-                    <a href="{{ path('login') }}">login</a>
-                {% endif %}
+                <a href="/gui/index.html">enter</a>
             </p>
         </div>
     </div>
