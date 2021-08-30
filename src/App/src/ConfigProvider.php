@@ -66,6 +66,7 @@ class ConfigProvider
                 Handler\UserRemovalHandler::class => Handler\UserRemovalHandlerFactory::class,
                 Middleware\AuthMiddleware::class => Middleware\AuthFactory::class,
                 Middleware\PermissionMiddleware::class => Middleware\PermissionFactory::class,
+                Middleware\TemplateVariablesMiddleware::class => Middleware\TemplateVariablesFactory::class,
             ],
         ];
     }
