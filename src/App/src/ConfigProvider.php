@@ -48,6 +48,7 @@ class ConfigProvider
                 Command\CreateAdministrataCommand::class => Command\CreateAdministrataCommandFactory::class,
                 Command\SetupCommand::class => Command\SetupCommandFactory::class,
                 Handler\GetDataHandler::class => Handler\GetDataHandlerFactory::class,
+                Handler\HelpHandler::class => Handler\HelpHandlerFactory::class,
                 Handler\HomeHandler::class => Handler\HomeHandlerFactory::class,
                 Handler\InvitationManagementHandler::class => Handler\InvitationManagementHandlerFactory::class,
                 Handler\InvitationRemovalHandler::class => Handler\InvitationRemovalHandlerFactory::class,
