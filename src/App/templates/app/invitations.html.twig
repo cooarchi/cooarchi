@@ -1,13 +1,13 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block title %}Invitations - cooArchi{% endblock %}
+{% block title %}Invitations | {% endblock %}
 
 {% block content %}
 
     <div class="row">
         <div class="col-md-12">
             <div class="jumbotron">
-                <h1>Invitations - cooArchi</h1>
+                <h1>Invitations</h1>
             </div>
             {% if error is defined and errorInput is not defined %}
                 <div class="alert alert-danger" role="alert">{{ error }}</div>
@@ -45,14 +45,14 @@
                 <tbody>
                 {% for invitation in invitations %}
                 <tr>
-                    <td>{{ invitation.getIdentifier() }}</td>
+                    <td>{{ invitation.getIdentifier()|escape }}</td>
                     <td>
-                        <a href="{{ backendUrl }}{{ path('register', {'invitationHash': invitation.getHash()}) }}" target="_blank">
-                            {{ backendUrl }}{{ path('register', {'invitationHash': invitation.getHash()}) }}
+                        <a href="{{ backendUrl }}{{ path('register', {'invitationHash': invitation.getHash()|escape}) }}" target="_blank">
+                            {{ backendUrl }}{{ path('register', {'invitationHash': invitation.getHash()|escape}) }}
                         </a>
                     </td>
                     <td>
-                        <a href="{{ path('invitation-removal', {'invitationId': invitation.getId()}) }}">remove</a>
+                        <a href="{{ path('invitation-removal', {'invitationId': invitation.getId()|escape }) }}">remove</a>
                     </td>
                 </tr>
                 {% endfor %}
