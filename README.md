@@ -12,7 +12,7 @@ cooArchi is like a conversation,you can tell stories, relate to what others said
 
 ## Setup/Installation guide
 
-see documentation [here](https://cooarchi.github.io/documentation/installation-and-setup/)
+see documentation [here](https://cooarchi.github.io/documentation/your%20own%20cooarchi/installation-and-setup/)
 
 ## Frontend related Routes
 
