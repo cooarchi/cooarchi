@@ -101,6 +101,8 @@ class SaveHandler implements RequestHandlerInterface
                     $this->uuidValidator->validate($elementValues->getElementId()) === true
                 ) {
                     $elementKey = $elementValues->getElementId();
+                } elseif ($elementValues->getLabel() === null && $elementValues->getLongText() !== null) {
+                    $elementKey = $elementValues->getLongText();
                 } elseif ($elementValues->getLabel() === null && $elementValues->getUrl() !== null) {
                     $elementKey = $elementValues->getUrl();
                 }
